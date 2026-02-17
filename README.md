@@ -248,10 +248,9 @@ Add these in Vercel dashboard:
 ## 🛠️ Development
 
 ### Running Tests
-```bash
-npm run test
-```
+Automated tests are not yet configured for this project, and there is no `test` script defined in `package.json`.
 
+To add tests, choose a test runner (for example, Jest, Vitest, or Playwright), set up the tooling, and then add an appropriate `test` script to `package.json`.
 ### Linting
 ```bash
 npm run lint
