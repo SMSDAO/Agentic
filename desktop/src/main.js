@@ -9,8 +9,10 @@ function createWindow() {
     width: 1400,
     height: 900,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+      sandbox: true,
     },
     icon: path.join(__dirname, '../assets/icon.png'),
     backgroundColor: '#0a0a0f',
