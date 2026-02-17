@@ -34,8 +34,19 @@ export class DALLEClient {
 
   async generateVariations(imageUrl: string): Promise<string[]> {
     // Note: This requires the image to be in PNG format and less than 4MB
+    // Fetch the image data from the URL and convert it to a File before sending to OpenAI
+    const imageResponse = await fetch(imageUrl);
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to fetch image for variation: ${imageResponse.status} ${imageResponse.statusText}`);
+    }
+
+    const blob = await imageResponse.blob();
+    const file = new File([blob], 'variation.png', {
+      type: blob.type || 'image/png',
+    });
+
     const response = await this.openai.images.createVariation({
-      image: imageUrl as unknown as File,
+      image: file,
       n: 2,
       size: '1024x1024',
     });
