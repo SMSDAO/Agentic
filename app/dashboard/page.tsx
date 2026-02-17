@@ -10,6 +10,9 @@ export default function DashboardPage() {
       change: '+12.5%',
       icon: Wallet,
       color: 'neon-blue',
+      textClass: 'text-neon-blue',
+      bgClass: 'bg-neon-blue/10',
+      iconClass: 'text-neon-blue',
     },
     {
       title: 'Active Positions',
@@ -17,6 +20,9 @@ export default function DashboardPage() {
       change: '+2',
       icon: TrendingUp,
       color: 'neon-purple',
+      textClass: 'text-neon-purple',
+      bgClass: 'bg-neon-purple/10',
+      iconClass: 'text-neon-purple',
     },
     {
       title: 'NFT Holdings',
@@ -24,6 +30,9 @@ export default function DashboardPage() {
       change: '+5',
       icon: ImageIcon,
       color: 'neon-pink',
+      textClass: 'text-neon-pink',
+      bgClass: 'bg-neon-pink/10',
+      iconClass: 'text-neon-pink',
     },
     {
       title: 'Recent Transactions',
@@ -31,6 +40,9 @@ export default function DashboardPage() {
       change: '+23',
       icon: Activity,
       color: 'neon-green',
+      textClass: 'text-neon-green',
+      bgClass: 'bg-neon-green/10',
+      iconClass: 'text-neon-green',
     },
   ];
 
@@ -53,10 +65,10 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-sm text-gray-400 mb-1">{stat.title}</p>
                     <p className="text-2xl font-bold mb-1">{stat.value}</p>
-                    <p className={`text-sm text-${stat.color}`}>{stat.change}</p>
+                    <p className={`text-sm ${stat.textClass}`}>{stat.change}</p>
                   </div>
-                  <div className={`p-3 rounded-xl bg-${stat.color}/10`}>
-                    <Icon className={`w-6 h-6 text-${stat.color}`} />
+                  <div className={`p-3 rounded-xl ${stat.bgClass}`}>
+                    <Icon className={`w-6 h-6 ${stat.iconClass}`} />
                   </div>
                 </div>
               </Card>
@@ -92,9 +104,9 @@ export default function DashboardPage() {
             <CardContent>
               <div className="space-y-3">
                 {[
-                  { name: 'SOL', percentage: 45, color: 'neon-blue' },
-                  { name: 'USDC', percentage: 30, color: 'neon-purple' },
-                  { name: 'Other', percentage: 25, color: 'neon-pink' },
+                  { name: 'SOL', percentage: 45, bgClass: 'bg-neon-blue' },
+                  { name: 'USDC', percentage: 30, bgClass: 'bg-neon-purple' },
+                  { name: 'Other', percentage: 25, bgClass: 'bg-neon-pink' },
                 ].map((token) => (
                   <div key={token.name}>
                     <div className="flex justify-between text-sm mb-1">
@@ -103,7 +115,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="h-2 bg-dark-elevated rounded-full overflow-hidden">
                       <div
-                        className={`h-full bg-${token.color}`}
+                        className={`h-full ${token.bgClass}`}
                         style={{ width: `${token.percentage}%` }}
                       />
                     </div>

@@ -72,4 +72,7 @@ export class CoinGeckoClient {
   }
 }
 
-export const coinGeckoClient = new CoinGeckoClient();
+// Export factory function instead of singleton
+export function createCoinGeckoClient(apiKey?: string) {
+  return new CoinGeckoClient(apiKey);
+}

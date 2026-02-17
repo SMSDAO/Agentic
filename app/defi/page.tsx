@@ -16,15 +16,15 @@ export default function DeFiPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           {[
-            { icon: ArrowLeftRight, label: 'Swap', color: 'neon-blue' },
-            { icon: Droplet, label: 'Liquidity', color: 'neon-purple' },
-            { icon: TrendingUp, label: 'Stake', color: 'neon-pink' },
-            { icon: Zap, label: 'Farm', color: 'neon-green' },
+            { icon: ArrowLeftRight, label: 'Swap', color: 'neon-blue', textClass: 'text-neon-blue' },
+            { icon: Droplet, label: 'Liquidity', color: 'neon-purple', textClass: 'text-neon-purple' },
+            { icon: TrendingUp, label: 'Stake', color: 'neon-pink', textClass: 'text-neon-pink' },
+            { icon: Zap, label: 'Farm', color: 'neon-green', textClass: 'text-neon-green' },
           ].map((action) => {
             const Icon = action.icon;
             return (
               <Button key={action.label} variant="secondary" className="h-24 flex-col gap-2">
-                <Icon className={`w-8 h-8 text-${action.color}`} />
+                <Icon className={`w-8 h-8 ${action.textClass}`} />
                 <span>{action.label}</span>
               </Button>
             );

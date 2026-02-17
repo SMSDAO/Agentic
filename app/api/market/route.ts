@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { coinGeckoClient } from '@/lib/market/coingecko';
+import { createCoinGeckoClient } from '@/lib/market/coingecko';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const endpoint = searchParams.get('endpoint') || 'trending';
 
-    let data;
+    let data: unknown;
+    const client = createCoinGeckoClient();
 
     switch (endpoint) {
       case 'trending':
-        data = await coinGeckoClient.getTrendingTokens();
+        data = await client.getTrendingTokens();
         break;
       case 'gainers':
-        data = await coinGeckoClient.getTopGainers(10);
+        data = await client.getTopGainers(10);
         break;
       case 'price':
         const tokenId = searchParams.get('tokenId');
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
             { status: 400 }
           );
         }
-        data = await coinGeckoClient.getPrice(tokenId);
+        data = await client.getPrice(tokenId);
         break;
       default:
         return NextResponse.json(

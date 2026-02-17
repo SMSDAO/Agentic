@@ -36,7 +36,7 @@ export class SolanaClient {
       SystemProgram.transfer({
         fromPubkey: fromKeypair.publicKey,
         toPubkey: new PublicKey(toAddress),
-        lamports: amount * LAMPORTS_PER_SOL,
+        lamports: Math.round(amount * LAMPORTS_PER_SOL),
       })
     );
 
@@ -111,4 +111,7 @@ export class SolanaClient {
   }
 }
 
-export const solanaClient = new SolanaClient();
+// Export factory function instead of singleton
+export function createSolanaClient(rpcUrl?: string, privateKey?: string) {
+  return new SolanaClient(rpcUrl, privateKey);
+}

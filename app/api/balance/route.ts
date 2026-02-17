@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { solanaClient } from '@/lib/solana/client';
+import { createSolanaClient } from '@/lib/solana/client';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const solanaClient = createSolanaClient();
     const balance = await solanaClient.getBalance(address);
 
     return NextResponse.json({ 

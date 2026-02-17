@@ -53,4 +53,7 @@ export class JupiterClient {
   }
 }
 
-export const jupiterClient = new JupiterClient();
+// Export factory function instead of singleton
+export function createJupiterClient() {
+  return new JupiterClient();
+}

@@ -55,4 +55,7 @@ export class DALLEClient {
   }
 }
 
-export const dalleClient = new DALLEClient();
+// Export factory function instead of singleton
+export function createDALLEClient(apiKey?: string) {
+  return new DALLEClient(apiKey);
+}

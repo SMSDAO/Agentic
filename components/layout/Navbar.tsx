@@ -66,6 +66,9 @@ export function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-white/5"
+            aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -77,7 +80,7 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-2">
+          <div id="mobile-menu" className="md:hidden py-4 space-y-2">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname?.startsWith(item.href);

@@ -9,6 +9,9 @@ export default function HomePage() {
       description: 'Deploy, transfer, and manage SPL tokens with ease',
       href: '/tokens',
       color: 'neon-blue',
+      bgClass: 'bg-neon-blue/10',
+      shadowClass: 'group-hover:shadow-neon-blue',
+      textClass: 'text-neon-blue',
     },
     {
       icon: Image,
@@ -16,6 +19,9 @@ export default function HomePage() {
       description: 'Create, mint, and trade NFTs on Solana',
       href: '/nfts',
       color: 'neon-purple',
+      bgClass: 'bg-neon-purple/10',
+      shadowClass: 'group-hover:shadow-neon-purple',
+      textClass: 'text-neon-purple',
     },
     {
       icon: TrendingUp,
@@ -23,6 +29,9 @@ export default function HomePage() {
       description: 'Swap, stake, and provide liquidity across protocols',
       href: '/defi',
       color: 'neon-pink',
+      bgClass: 'bg-neon-pink/10',
+      shadowClass: 'group-hover:shadow-neon-pink',
+      textClass: 'text-neon-pink',
     },
     {
       icon: BarChart3,
@@ -30,6 +39,9 @@ export default function HomePage() {
       description: 'Real-time prices and analytics',
       href: '/market',
       color: 'neon-green',
+      bgClass: 'bg-neon-green/10',
+      shadowClass: 'group-hover:shadow-neon-green',
+      textClass: 'text-neon-green',
     },
     {
       icon: Bot,
@@ -37,6 +49,9 @@ export default function HomePage() {
       description: 'Autonomous blockchain operations powered by AI',
       href: '/ai-agent',
       color: 'neon-yellow',
+      bgClass: 'bg-neon-yellow/10',
+      shadowClass: 'group-hover:shadow-neon-yellow',
+      textClass: 'text-neon-yellow',
     },
   ];
 
@@ -86,8 +101,8 @@ export default function HomePage() {
                 href={feature.href}
                 className="neo-card p-6 hover:scale-105 transition-transform duration-300 group"
               >
-                <div className={`inline-flex p-3 rounded-xl bg-${feature.color}/10 mb-4 group-hover:shadow-${feature.color}`}>
-                  <Icon className={`w-6 h-6 text-${feature.color}`} />
+                <div className={`inline-flex p-3 rounded-xl ${feature.bgClass} mb-4 ${feature.shadowClass}`}>
+                  <Icon className={`w-6 h-6 ${feature.textClass}`} />
                 </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
                 <p className="text-gray-400">{feature.description}</p>

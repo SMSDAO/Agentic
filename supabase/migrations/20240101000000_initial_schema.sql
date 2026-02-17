@@ -1,3 +1,6 @@
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS public.users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -183,3 +186,29 @@ CREATE TRIGGER update_defi_positions_updated_at
 CREATE TRIGGER update_agent_configurations_updated_at
     BEFORE UPDATE ON public.agent_configurations
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Add missing RLS policies for nft_collections
+CREATE POLICY nft_collections_read_own ON public.nft_collections
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY nft_collections_manage_own ON public.nft_collections
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Add missing RLS policies for agent_memory
+CREATE POLICY agent_memory_read_own ON public.agent_memory
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.agent_configurations
+            WHERE agent_configurations.id = agent_memory.agent_id
+            AND agent_configurations.user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY agent_memory_manage_own ON public.agent_memory
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM public.agent_configurations
+            WHERE agent_configurations.id = agent_memory.agent_id
+            AND agent_configurations.user_id = auth.uid()
+        )
+    );

@@ -1,6 +1,6 @@
 import { ChatOpenAI } from '@langchain/openai';
 import { Tool } from '@langchain/core/tools';
-import { solanaClient } from '../solana/client';
+import { createSolanaClient } from '../solana/client';
 
 // Custom Solana Tools for LangChain
 class GetBalanceTool extends Tool {
@@ -9,7 +9,8 @@ class GetBalanceTool extends Tool {
 
   async _call(address: string): Promise<string> {
     try {
-      const balance = await solanaClient.getBalance(address);
+      const client = createSolanaClient();
+      const balance = await client.getBalance(address);
       return `Balance: ${balance} SOL`;
     } catch (error) {
       return `Error getting balance: ${error}`;
@@ -24,7 +25,8 @@ class GetTokenBalanceTool extends Tool {
   async _call(input: string): Promise<string> {
     try {
       const [tokenAddress, ownerAddress] = input.split(',');
-      const balance = await solanaClient.getTokenBalance(tokenAddress.trim(), ownerAddress.trim());
+      const client = createSolanaClient();
+      const balance = await client.getTokenBalance(tokenAddress.trim(), ownerAddress.trim());
       return `Token Balance: ${balance}`;
     } catch (error) {
       return `Error getting token balance: ${error}`;
