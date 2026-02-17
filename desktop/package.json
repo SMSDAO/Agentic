@@ -1,0 +1,36 @@
+{
+  "name": "agentic-desktop",
+  "version": "0.1.0",
+  "description": "Agentic Desktop Admin Application",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "electron-forge start",
+    "build": "tsc",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "start": "electron-forge start"
+  },
+  "keywords": ["electron", "solana", "web3", "admin"],
+  "author": "SMSDAO",
+  "license": "MIT",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "@solana/web3.js": "^1.95.8",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.6.0",
+    "@electron-forge/maker-deb": "^7.6.0",
+    "@electron-forge/maker-rpm": "^7.6.0",
+    "@electron-forge/maker-squirrel": "^7.6.0",
+    "@electron-forge/maker-zip": "^7.6.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
+    "@electron-forge/plugin-fuses": "^7.6.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "^33.2.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

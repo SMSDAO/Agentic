@@ -1,0 +1,22 @@
+[project]
+# Supabase project configuration
+
+[database]
+# PostgreSQL database configuration
+port = 54322
+
+[api]
+# API configuration
+port = 54321
+schemas = ["public"]
+max_rows = 1000
+
+[auth]
+# Auth configuration
+site_url = "http://localhost:3000"
+additional_redirect_urls = []
+jwt_expiry = 3600
+
+[studio]
+# Studio configuration
+port = 54323
