@@ -265,7 +265,7 @@ export async function exportAgentConfig(id: string): Promise<string> {
   const { data: schedule } = await supabase
     .from('agent_schedules')
     .select('*')
-    .eq('agent_id', id)
+    .maybeSingle();
     .single();
 
   const config = {
