@@ -91,7 +91,8 @@ export async function updateFeed(
       refresh_interval_seconds: updates.refreshIntervalSeconds,
       enabled: updates.enabled,
       last_price: updates.lastPrice,
-      last_updated: updates.lastPrice ? new Date().toISOString() : undefined,
+      last_updated:
+        updates.lastPrice !== undefined ? new Date().toISOString() : undefined,
     })
     .eq('id', id)
     .select()
