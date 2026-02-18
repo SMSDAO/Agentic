@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { SearchInput } from '@/components/ui/SearchInput';
@@ -31,11 +31,7 @@ export default function AdminTransactionsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [currentPage, searchQuery, typeFilter, statusFilter]);
-
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -56,7 +52,11 @@ export default function AdminTransactionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, searchQuery, typeFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const handleExportCSV = () => {
     // Export logic would go here

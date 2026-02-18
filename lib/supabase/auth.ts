@@ -221,36 +221,61 @@ export async function signInWithWallet(
   signature: string,
   message: string
 ): Promise<AuthUser | null> {
-  // Verify signature (implementation depends on wallet adapter)
-  // For now, we'll use the admin client to find or create user
-  const supabase = createSupabaseAdmin();
+  // Verify signature using Solana web3.js
+  try {
+    const { PublicKey } = await import('@solana/web3.js');
+    const nacl = await import('tweetnacl');
+    const bs58 = await import('bs58');
+    
+    // Decode the signature and message
+    const signatureUint8 = bs58.default.decode(signature);
+    const messageUint8 = new TextEncoder().encode(message);
+    const publicKeyObj = new PublicKey(walletAddress);
+    
+    // Verify the signature
+    const verified = nacl.default.sign.detached.verify(
+      messageUint8,
+      signatureUint8,
+      publicKeyObj.toBytes()
+    );
+    
+    if (!verified) {
+      throw new Error('Invalid signature - wallet ownership verification failed');
+    }
+    
+    // Signature verified, proceed with authentication
+    const supabase = createSupabaseAdmin();
 
-  // Check if user exists with this wallet
-  const { data: existingUser } = await supabase
-    .from('users')
-    .select('*')
-    .eq('wallet_address', walletAddress)
-    .single();
+    // Check if user exists with this wallet
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('wallet_address', walletAddress)
+      .single();
 
-  if (existingUser) {
-    return existingUser as AuthUser;
+    if (existingUser) {
+      return existingUser as AuthUser;
+    }
+
+    // Create new user with wallet
+    const { data: newUser, error } = await supabase
+      .from('users')
+      .insert({
+        email: `${walletAddress}@wallets.agentic.io`,
+        wallet_address: walletAddress,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return newUser as AuthUser;
+  } catch (error) {
+    console.error('Wallet authentication failed:', error);
+    throw new Error('Failed to verify wallet signature');
   }
-
-  // Create new user with wallet
-  const { data: newUser, error } = await supabase
-    .from('users')
-    .insert({
-      email: `${walletAddress}@wallets.agentic.io`,
-      wallet_address: walletAddress,
-    })
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return newUser as AuthUser;
 }
 
 /**

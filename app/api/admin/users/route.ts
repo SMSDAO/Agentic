@@ -21,7 +21,9 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (search) {
-      query = query.or(`email.ilike.%${search}%,full_name.ilike.%${search}%`);
+      // Sanitize search input by escaping special characters
+      const sanitizedSearch = search.replace(/[%_]/g, '\\$&');
+      query = query.or(`email.ilike.%${sanitizedSearch}%,full_name.ilike.%${sanitizedSearch}%`);
     }
 
     if (status !== 'all') {
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
     const { data: users, error, count } = await query;
 
     if (error) {
+      console.error('Failed to fetch users:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
@@ -43,7 +46,11 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil((count || 0) / perPage),
       total: count || 0,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 403 });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching users:', error);
+      return NextResponse.json({ error: error.message }, { status: 403 });
+    }
+    return NextResponse.json({ error: 'Unknown error occurred' }, { status: 500 });
   }
 }

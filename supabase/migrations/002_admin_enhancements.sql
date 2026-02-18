@@ -116,9 +116,19 @@ CREATE POLICY users_admin_read_all ON public.users
         )
     );
 
+-- Users can update their own profile data, but NOT role or status
+CREATE POLICY users_self_update ON public.users
+    FOR UPDATE USING (auth.uid() = id)
+    WITH CHECK (
+        auth.uid() = id AND
+        -- Prevent users from modifying their own role or status
+        (SELECT role FROM public.users WHERE id = auth.uid()) = role AND
+        (SELECT status FROM public.users WHERE id = auth.uid()) = status
+    );
+
+-- Only admins can update any user's data including role and status
 CREATE POLICY users_admin_update ON public.users
     FOR UPDATE USING (
-        auth.uid() = id OR
         EXISTS (
             SELECT 1 FROM public.users
             WHERE users.id = auth.uid()

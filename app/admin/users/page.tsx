@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { SearchInput } from '@/components/ui/SearchInput';
@@ -33,11 +33,7 @@ export default function AdminUsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage, searchQuery, statusFilter, roleFilter]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -58,7 +54,11 @@ export default function AdminUsersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, searchQuery, statusFilter, roleFilter]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleUpdateStatus = async (userId: string, status: string) => {
     try {
