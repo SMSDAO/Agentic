@@ -89,23 +89,89 @@ CREATE TABLE IF NOT EXISTS public.agent_schedules (
     last_run TIMESTAMP WITH TIME ZONE,
     next_run TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(agent_id)
 );
 
 -- ============================================================================
 -- 2. USERS TABLE ENHANCEMENTS
 -- ============================================================================
 
--- Add new columns to existing users table
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'enterprise'));
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS credits DECIMAL NOT NULL DEFAULT 0;
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS rate_limits JSONB DEFAULT '{
+-- Add new columns to existing users table (nullable first, then update defaults)
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS plan TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS credits DECIMAL;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS rate_limits JSONB;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS status TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS role TEXT;
+
+-- Set defaults for existing rows
+UPDATE public.users SET plan = 'free' WHERE plan IS NULL;
+UPDATE public.users SET credits = 0 WHERE credits IS NULL;
+UPDATE public.users SET rate_limits = '{
+    "requests_per_minute": 10,
+    "requests_per_hour": 100,
+    "requests_per_day": 1000
+}'::jsonb WHERE rate_limits IS NULL;
+UPDATE public.users SET status = 'active' WHERE status IS NULL;
+UPDATE public.users SET role = 'user' WHERE role IS NULL;
+
+-- Now add NOT NULL constraints and checks
+ALTER TABLE public.users ALTER COLUMN plan SET NOT NULL;
+ALTER TABLE public.users ALTER COLUMN plan SET DEFAULT 'free';
+ALTER TABLE public.users ADD CONSTRAINT users_plan_check CHECK (plan IN ('free', 'pro', 'enterprise'));
+
+ALTER TABLE public.users ALTER COLUMN credits SET NOT NULL;
+ALTER TABLE public.users ALTER COLUMN credits SET DEFAULT 0;
+
+ALTER TABLE public.users ALTER COLUMN rate_limits SET DEFAULT '{
     "requests_per_minute": 10,
     "requests_per_hour": 100,
     "requests_per_day": 1000
 }'::jsonb;
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'banned'));
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin', 'super_admin'));
+
+ALTER TABLE public.users ALTER COLUMN status SET DEFAULT 'active';
+ALTER TABLE public.users ADD CONSTRAINT users_status_check CHECK (status IN ('active', 'suspended', 'banned'));
+
+ALTER TABLE public.users ALTER COLUMN role SET DEFAULT 'user';
+ALTER TABLE public.users ADD CONSTRAINT users_role_check CHECK (role IN ('user', 'admin', 'super_admin'));
+
+-- Update RLS policies for users table to prevent privilege escalation
+-- Drop the old update policy that allows users to modify their own rows without restrictions
+DROP POLICY IF EXISTS users_update_own ON public.users;
+
+-- Create new restricted update policy: users can update their own data but NOT role/status/credits/plan
+CREATE POLICY users_update_own_restricted ON public.users
+    FOR UPDATE 
+    USING (auth.uid() = id)
+    WITH CHECK (
+        auth.uid() = id 
+        AND role = (SELECT role FROM public.users WHERE id = auth.uid())
+        AND status = (SELECT status FROM public.users WHERE id = auth.uid())
+        AND credits = (SELECT credits FROM public.users WHERE id = auth.uid())
+        AND plan = (SELECT plan FROM public.users WHERE id = auth.uid())
+    );
+
+-- Admin policy: admins can update any user's data including privileged fields
+CREATE POLICY users_admin_update ON public.users
+    FOR UPDATE 
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.users
+            WHERE users.id = auth.uid()
+            AND users.role IN ('admin', 'super_admin')
+        )
+    );
+
+-- Admin read policy: admins can view all users
+CREATE POLICY users_admin_read ON public.users
+    FOR SELECT 
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.users
+            WHERE users.id = auth.uid()
+            AND users.role IN ('admin', 'super_admin')
+        )
+    );
 
 -- ============================================================================
 -- 3. BILLING TABLES
@@ -190,7 +256,9 @@ CREATE TABLE IF NOT EXISTS public.fee_overrides (
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    CHECK ((agent_id IS NOT NULL AND user_id IS NULL) OR (agent_id IS NULL AND user_id IS NOT NULL))
+    CHECK ((agent_id IS NOT NULL AND user_id IS NULL) OR (agent_id IS NULL AND user_id IS NOT NULL)),
+    UNIQUE(fee_type, agent_id) WHERE agent_id IS NOT NULL,
+    UNIQUE(fee_type, user_id) WHERE user_id IS NOT NULL
 );
 
 -- ============================================================================
@@ -292,7 +360,8 @@ CREATE TABLE IF NOT EXISTS public.addon_configs (
     config JSONB NOT NULL DEFAULT '{}'::jsonb,
     enabled BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(addon_id, user_id)
 );
 
 -- ============================================================================
@@ -564,10 +633,7 @@ CREATE POLICY fee_overrides_admin_all ON public.fee_overrides
         )
     );
 
--- Wallet connectors policies (public read, admin write)
-CREATE POLICY wallet_connectors_public_read ON public.wallet_connectors
-    FOR SELECT USING (enabled = true);
-
+-- Wallet connectors policies (admin only - contains sensitive RPC config)
 CREATE POLICY wallet_connectors_admin_all ON public.wallet_connectors
     FOR ALL USING (
         EXISTS (
@@ -577,10 +643,7 @@ CREATE POLICY wallet_connectors_admin_all ON public.wallet_connectors
         )
     );
 
--- Price oracles policies (public read, admin write)
-CREATE POLICY price_oracles_public_read ON public.price_oracles
-    FOR SELECT USING (enabled = true);
-
+-- Price oracles policies (admin only - contains sensitive API config)
 CREATE POLICY price_oracles_admin_all ON public.price_oracles
     FOR ALL USING (
         EXISTS (
@@ -590,10 +653,7 @@ CREATE POLICY price_oracles_admin_all ON public.price_oracles
         )
     );
 
--- Oracle feeds policies (public read, admin write)
-CREATE POLICY oracle_feeds_public_read ON public.oracle_feeds
-    FOR SELECT USING (enabled = true);
-
+-- Oracle feeds policies (admin only - contains sensitive feed IDs)
 CREATE POLICY oracle_feeds_admin_all ON public.oracle_feeds
     FOR ALL USING (
         EXISTS (
@@ -603,10 +663,7 @@ CREATE POLICY oracle_feeds_admin_all ON public.oracle_feeds
         )
     );
 
--- RPC endpoints policies (public read, admin write)
-CREATE POLICY rpc_endpoints_public_read ON public.rpc_endpoints
-    FOR SELECT USING (enabled = true);
-
+-- RPC endpoints policies (admin only - contains sensitive URLs/credentials)
 CREATE POLICY rpc_endpoints_admin_all ON public.rpc_endpoints
     FOR ALL USING (
         EXISTS (
@@ -644,7 +701,9 @@ CREATE POLICY addon_configs_admin_all ON public.addon_configs
 
 -- API keys policies (users manage their own, admins see all)
 CREATE POLICY api_keys_own_all ON public.api_keys
-    FOR ALL USING (user_id = auth.uid());
+    FOR ALL 
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY api_keys_admin_read ON public.api_keys
     FOR SELECT USING (
@@ -796,8 +855,18 @@ CREATE TRIGGER update_agents_updated_at BEFORE UPDATE ON public.agents
 CREATE TRIGGER update_agent_schedules_updated_at BEFORE UPDATE ON public.agent_schedules
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- Only create users trigger if it doesn't already exist (may exist from migration 001)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger 
+        WHERE tgname = 'update_users_updated_at' 
+        AND tgrelid = 'public.users'::regclass
+    ) THEN
+        CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    END IF;
+END $$;
 
 CREATE TRIGGER update_billing_plans_updated_at BEFORE UPDATE ON public.billing_plans
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

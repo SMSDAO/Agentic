@@ -116,13 +116,21 @@ const AgentsScreen: React.FC = () => {
                       >
                         <Pause size={16} className="text-yellow-400" />
                       </button>
-                    ) : (
+                    ) : agent.status === 'paused' ? (
                       <button
                         onClick={() => handleResume(agent.id)}
                         className="p-2 hover:bg-gray-800 rounded"
                         title="Resume"
                       >
                         <Play size={16} className="text-green-400" />
+                      </button>
+                    ) : (
+                      <button
+                        className="p-2 hover:bg-gray-800 rounded opacity-50 cursor-not-allowed"
+                        title="Agent in error state - requires manual intervention"
+                        disabled
+                      >
+                        <Play size={16} className="text-gray-600" />
                       </button>
                     )}
                     <button

@@ -4,8 +4,16 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '';
 
+// Validate service role key is present for admin operations
+if (!supabaseServiceKey) {
+  throw new Error(
+    'VITE_SUPABASE_SERVICE_ROLE_KEY is required for admin operations. ' +
+    'Please add it to your .env file.'
+  );
+}
+
 // Create Supabase client with service role for admin operations
-export const supabase = createClient(supabaseUrl, supabaseServiceKey || supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,

@@ -64,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="p-6 border-t border-gray-800">
           <div className="text-xs text-gray-500">
             <div>Version 1.0.0</div>
-            <div className="mt-1">© 2024 Agentic</div>
+            <div className="mt-1">© {new Date().getFullYear()} Agentic</div>
           </div>
         </div>
       </aside>

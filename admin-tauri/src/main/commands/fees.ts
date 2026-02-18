@@ -36,15 +36,18 @@ export async function setAgentFeeOverride(
   amount: number,
   percentage?: number
 ): Promise<void> {
-  const { error } = await supabase.from('fee_overrides').upsert([
-    {
-      agent_id: agentId,
-      fee_type: feeType,
-      amount,
-      percentage,
-      active: true,
-    },
-  ]);
+  const { error } = await supabase.from('fee_overrides').upsert(
+    [
+      {
+        agent_id: agentId,
+        fee_type: feeType,
+        amount,
+        percentage,
+        active: true,
+      },
+    ],
+    { onConflict: 'fee_type,agent_id' }
+  );
 
   if (error) throw error;
 }
@@ -55,15 +58,18 @@ export async function setUserFeeOverride(
   amount: number,
   percentage?: number
 ): Promise<void> {
-  const { error } = await supabase.from('fee_overrides').upsert([
-    {
-      user_id: userId,
-      fee_type: feeType,
-      amount,
-      percentage,
-      active: true,
-    },
-  ]);
+  const { error } = await supabase.from('fee_overrides').upsert(
+    [
+      {
+        user_id: userId,
+        fee_type: feeType,
+        amount,
+        percentage,
+        active: true,
+      },
+    ],
+    { onConflict: 'fee_type,user_id' }
+  );
 
   if (error) throw error;
 }
