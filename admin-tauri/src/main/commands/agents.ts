@@ -146,9 +146,14 @@ export async function runAgentOnce(id: string): Promise<{ success: boolean; mess
 
 // Reset agent state
 export async function resetAgentState(id: string): Promise<void> {
-  // TODO: Implement memory reset for the new `agents` schema when a dedicated
-  // memory table/relationship is available. The legacy `agent_memory` table
-  // is tied to `agent_configurations` and must not be used here.
+  // Fetch agent to get its associated configuration ID
+  const agent = await getAgent(id);
+  const configurationId = (agent as any).configuration_id;
+
+  // Delete agent memory keyed by configuration ID, if available
+  if (configurationId) {
+    await supabase.from('agent_memory').delete().eq('agent_id', configurationId);
+  }
 
   // Reset status to active
   await updateAgent({ id, status: 'active' });
