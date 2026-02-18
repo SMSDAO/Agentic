@@ -16,6 +16,23 @@ A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered a
 - Fully responsive (desktop, tablet, mobile)
 - Dashboard for all blockchain operations
 
+### 🖥️ Admin Panel - Tauri Desktop App
+- **Local Windows application** for platform administration
+- Complete agent management (create, pause, resume, configure)
+- User management with credits, plans, and account controls
+- Billing system (Stripe + crypto payment tracking)
+- Fee configuration and overrides
+- Infrastructure management (RPC endpoints, oracles, wallets)
+- Add-ons and SDK/API key management
+- Comprehensive audit logging
+- Secure admin-only access with service role key
+
+> **Note:** Admin panel screenshots will be added after initial deployment. To see the admin interface:
+> 1. Navigate to `admin-tauri/`
+> 2. Configure `.env` with your Supabase service role key
+> 3. Run `npm run tauri:dev`
+> 4. The admin panel will launch as a desktop application
+
 ### 🗄️ Database - Supabase Integration
 - Real-time database with PostgreSQL
 - Row Level Security (RLS) policies
@@ -128,6 +145,12 @@ A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered a
 │   ├── market/            # Market data
 │   ├── ai-agent/          # AI agent interface
 │   └── api/               # API routes
+├── admin-tauri/           # Tauri Admin Desktop App
+│   ├── src/
+│   │   ├── main/          # Backend logic (Supabase commands)
+│   │   └── ui/            # React frontend (11 admin screens)
+│   ├── src-tauri/         # Rust backend
+│   └── package.json
 ├── components/            # Shared UI components
 │   ├── ui/                # Neo Glow components
 │   └── layout/            # Layout components
@@ -221,6 +244,46 @@ npm run make
 
 The `agentic.exe` will be in the `out` directory.
 
+## 🔧 Admin Panel (Tauri)
+
+The admin panel is a separate Tauri desktop application for platform administration.
+
+```bash
+cd admin-tauri
+npm install
+cp .env.example .env
+```
+
+Edit `.env` and add your Supabase **service role key** (required for admin operations):
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+Run the admin panel:
+```bash
+npm run tauri:dev
+```
+
+Build for production:
+```bash
+npm run tauri:build
+```
+
+### Admin Panel Features
+- **Agents**: Create, configure, pause/resume AI agents with schedules
+- **Users**: Manage users, adjust credits/plans, freeze accounts
+- **Billing**: View subscription plans, invoices, process refunds
+- **Fees**: Configure global and per-user/per-agent fees
+- **Infrastructure**: Manage wallet connectors, price oracles, RPC endpoints
+- **Add-ons**: Install and configure platform extensions
+- **SDK/API**: Generate and manage API keys with scopes
+- **Logs**: View comprehensive audit trail
+- **Settings**: Configure global platform settings
+
+> **Security Note:** The admin panel requires the Supabase service role key, which has full database access. Never expose this key publicly or commit it to version control. Run the admin panel only on secure, trusted machines.
+
 ## 🌐 Deployment
 
 ### Vercel Deployment
@@ -298,6 +361,41 @@ import { Card } from '@/components/ui/Card';
 <Button variant="primary">Glow Button</Button>
 <Card className="neo-card">Content</Card>
 ```
+
+## 📸 Screenshots
+
+### Public Web Frontend
+
+> **Coming Soon**: Screenshots of the landing page, dashboard, token operations, NFT management, DeFi integrations, and market data views will be added here once deployed.
+
+The public web frontend features:
+- Landing page with Neo Glow design
+- User dashboard with portfolio overview
+- Token operations (transfer, stake, airdrop)
+- NFT creation and management
+- DeFi integrations (Jupiter, Raydium, etc.)
+- Market data and charts
+- AI agent interface
+
+### Admin Panel (Tauri Desktop)
+
+> **Coming Soon**: Screenshots of the admin panel will be added after initial deployment.
+
+The admin panel provides:
+- Agent management screen with create/pause/resume controls
+- User management with credits and plan adjustments
+- Billing overview with subscription plans
+- Fee configuration interface
+- Infrastructure management (RPC, oracles, wallets)
+- Add-ons marketplace
+- SDK/API key management
+- Audit log viewer
+- Platform settings
+
+To generate screenshots:
+1. Run the web app: `npm run dev` → Open http://localhost:3000
+2. Run the admin panel: `cd admin-tauri && npm run tauri:dev`
+3. Take screenshots and add them to the repository
 
 ## 🔐 Security
 
