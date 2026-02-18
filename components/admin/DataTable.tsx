@@ -48,10 +48,16 @@ export function DataTable<T extends Record<string, any>>({
         const bVal = b[sortKey];
         const direction = sortDirection === 'asc' ? 1 : -1;
 
+        if (aVal === null || aVal === undefined) return 1;
+        if (bVal === null || bVal === undefined) return -1;
+
         if (typeof aVal === 'string') {
-          return aVal.localeCompare(bVal) * direction;
+          return aVal.localeCompare(String(bVal)) * direction;
         }
-        return (aVal - bVal) * direction;
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return (aVal - bVal) * direction;
+        }
+        return 0;
       })
     : data;
 

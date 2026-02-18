@@ -38,7 +38,14 @@ export async function PATCH(
 
     return NextResponse.json({ user: data });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 403 });
+    if (error instanceof Error) {
+      // Check if it's an authorization error
+      if (error.message.includes('required') || error.message.includes('access')) {
+        return NextResponse.json({ error: error.message }, { status: 403 });
+      }
+      // Other errors are server errors
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Unknown error occurred' }, { status: 500 });
   }
 }

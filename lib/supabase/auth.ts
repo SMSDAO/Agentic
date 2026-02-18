@@ -240,7 +240,7 @@ export async function signInWithWallet(
   const { data: newUser, error } = await supabase
     .from('users')
     .insert({
-      email: `${walletAddress}@wallet.local`,
+      email: `${walletAddress}@wallets.agentic.io`,
       wallet_address: walletAddress,
     })
     .select()

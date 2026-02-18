@@ -1,7 +1,7 @@
 // Admin dashboard renderer script for Electron
 
 // IPC communication setup
-const { ipcRenderer } = window.require ? window.require('electron') : { ipcRenderer: null };
+const ipcRenderer = typeof window !== 'undefined' && window.require ? window.require('electron').ipcRenderer : null;
 
 // Load dashboard stats
 async function loadStats() {
