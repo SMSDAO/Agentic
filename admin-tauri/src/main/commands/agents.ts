@@ -220,14 +220,19 @@ export async function setSchedule(
   agentId: string,
   cron: string,
   timezone: string = 'UTC'
-): Promise<void> {
-  const { error } = await supabase.from('agent_schedules').upsert([
-    {
-      agent_id: agentId,
-      cron,
-      timezone,
-      enabled: true,
-    },
+  const { error } = await supabase
+    .from('agent_schedules')
+    .upsert(
+      [
+        {
+          agent_id: agentId,
+          cron,
+          timezone,
+          enabled: true,
+        },
+      ],
+      { onConflict: 'agent_id' }
+    );
   ]);
 
   if (error) throw error;
