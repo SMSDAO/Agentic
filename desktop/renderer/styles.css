@@ -1,0 +1,226 @@
+/* Neo Glow styles for desktop admin */
+
+@import '../../styles/globals.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    padding: 1.5rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+}
+
+.sidebar-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    color: #9ca3af;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.nav-item.active {
+    background: linear-gradient(to right, rgba(0, 212, 255, 0.2), rgba(176, 38, 255, 0.2));
+    color: rgb(0, 212, 255);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-refresh {
+    padding: 0.5rem 1rem;
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 0.5rem;
+    color: rgb(0, 212, 255);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh:hover {
+    background: rgba(0, 212, 255, 0.2);
+}
+
+.user-info {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.bg-neon-blue {
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.bg-neon-green {
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.bg-neon-purple {
+    background: rgba(176, 38, 255, 0.1);
+}
+
+.bg-neon-pink {
+    background: rgba(255, 0, 110, 0.1);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-label {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Activity Section */
+.activity-section {
+    padding: 1.5rem;
+}
+
+.activity-section h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-action {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.activity-user {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.activity-time {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.loading {
+    text-align: center;
+    color: #9ca3af;
+    padding: 2rem;
+}

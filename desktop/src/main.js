@@ -45,6 +45,34 @@ function createTray() {
       },
     },
     {
+      label: 'Admin Dashboard',
+      click: () => {
+        const adminWindow = new BrowserWindow({
+          width: 1200,
+          height: 800,
+          webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+          },
+          backgroundColor: '#0a0a0f',
+        });
+        adminWindow.loadFile(path.join(__dirname, '../renderer/admin.html'));
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'View Stats',
+      click: async () => {
+        // Show notification with quick stats
+        const { Notification } = require('electron');
+        new Notification({
+          title: 'Platform Stats',
+          body: 'Users: 1234 | Transactions: 5678',
+        }).show();
+      },
+    },
+    { type: 'separator' },
+    {
       label: 'Quit',
       click: () => {
         app.isQuitting = true;
@@ -90,4 +118,51 @@ ipcMain.handle('get-app-version', () => {
 ipcMain.handle('check-for-updates', async () => {
   // Auto-update logic would go here
   return { available: false };
+});
+
+// Admin IPC handlers
+ipcMain.handle('get-admin-stats', async () => {
+  // In production, this would make an API call to the backend
+  try {
+    // Mock data for now - would fetch from Supabase in production
+    return {
+      totalUsers: 1234,
+      totalTransactions: 5678,
+      totalTokens: 89,
+      totalValue: 3500000,
+    };
+  } catch (error) {
+    console.error('Failed to fetch admin stats:', error);
+    return {
+      totalUsers: 0,
+      totalTransactions: 0,
+      totalTokens: 0,
+      totalValue: 0,
+    };
+  }
+});
+
+ipcMain.handle('get-recent-activity', async () => {
+  // Mock data - would fetch from Supabase in production
+  return [
+    { action: 'New user registration', user: 'john@example.com', time: '2 minutes ago' },
+    { action: 'Token transfer', user: 'alice@example.com', time: '5 minutes ago' },
+    { action: 'NFT minted', user: 'bob@example.com', time: '10 minutes ago' },
+  ];
+});
+
+ipcMain.handle('open-admin-dashboard', () => {
+  // Create admin dashboard window
+  const adminWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+    backgroundColor: '#0a0a0f',
+  });
+
+  adminWindow.loadFile(path.join(__dirname, '../renderer/admin.html'));
+  return true;
 });

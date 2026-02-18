@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-dark-bg">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar neo-card">
+            <div class="sidebar-header">
+                <h2 class="glow-text">Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="#users" class="nav-item">
+                    <span>👥</span> Users
+                </a>
+                <a href="#transactions" class="nav-item">
+                    <span>💳</span> Transactions
+                </a>
+                <a href="#tokens" class="nav-item">
+                    <span>🪙</span> Tokens
+                </a>
+                <a href="#settings" class="nav-item">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="refreshData()">🔄 Refresh</button>
+                    <span class="user-info">Admin User</span>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card neo-card">
+                        <div class="stat-icon bg-neon-blue">👥</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total Users</p>
+                            <p class="stat-value" id="totalUsers">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card neo-card">
+                        <div class="stat-icon bg-neon-green">💳</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Transactions</p>
+                            <p class="stat-value" id="totalTransactions">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card neo-card">
+                        <div class="stat-icon bg-neon-purple">🪙</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total Tokens</p>
+                            <p class="stat-value" id="totalTokens">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card neo-card">
+                        <div class="stat-icon bg-neon-pink">💰</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total Value</p>
+                            <p class="stat-value" id="totalValue">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section neo-card">
+                    <h3>Recent Activity</h3>
+                    <div id="activityList" class="activity-list">
+                        <p class="loading">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
