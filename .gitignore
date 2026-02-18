@@ -45,6 +45,13 @@ mobile/.expo/
 mobile/dist/
 mobile/node_modules/
 
+# Tauri Admin Panel
+admin-tauri/node_modules/
+admin-tauri/dist/
+admin-tauri/src-tauri/target/
+admin-tauri/.env
+admin-tauri/.env.local
+
 # Misc
 *.tsbuildinfo
 next-env.d.ts
