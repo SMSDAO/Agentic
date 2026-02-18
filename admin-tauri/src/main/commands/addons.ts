@@ -60,14 +60,17 @@ export async function configureAddon(
   userId: string,
   config: Record<string, any>
 ): Promise<void> {
-  const { error } = await supabase.from('addon_configs').upsert([
-    {
-      addon_id: addonId,
-      user_id: userId,
-      config,
-      enabled: true,
-    },
-  ]);
+  const { error } = await supabase.from('addon_configs').upsert(
+    [
+      {
+        addon_id: addonId,
+        user_id: userId,
+        config,
+        enabled: true,
+      },
+    ],
+    { onConflict: 'addon_id,user_id' }
+  );
 
   if (error) throw error;
 }
