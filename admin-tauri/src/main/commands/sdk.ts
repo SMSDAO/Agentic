@@ -1,12 +1,14 @@
 import { supabase, APIKey } from '../supabase';
-import { createHash, randomBytes } from 'crypto';
+import { sha256 } from '@noble/hashes/sha256';
+import { randomBytes, bytesToHex } from '@noble/hashes/utils';
 
 function hashAPIKey(key: string): string {
-  return createHash('sha256').update(key).digest('hex');
+  const data = new TextEncoder().encode(key);
+  return bytesToHex(sha256(data));
 }
 
 function generateAPIKey(): { key: string; prefix: string; hash: string } {
-  const key = `ag_${randomBytes(32).toString('hex')}`;
+  const key = `ag_${bytesToHex(randomBytes(32))}`;
   const prefix = key.substring(0, 10);
   const hash = hashAPIKey(key);
   return { key, prefix, hash };
