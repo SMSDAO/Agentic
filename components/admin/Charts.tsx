@@ -26,8 +26,8 @@ const COLORS = [
 
 interface ChartData {
   name: string;
-  value: number;
-  [key: string]: any;
+  value?: number;
+  [key: string]: string | number | undefined;
 }
 
 interface LineChartProps {

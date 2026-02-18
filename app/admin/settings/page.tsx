@@ -3,9 +3,8 @@
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { StatsCard } from '@/components/admin/StatsCard';
 import { Card } from '@/components/ui/Card';
-import { Toggle } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { Settings as SettingsIcon, Shield, Bell, Database, Save } from 'lucide-react';
+import { Settings as SettingsIcon, Shield, Database, Save } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
