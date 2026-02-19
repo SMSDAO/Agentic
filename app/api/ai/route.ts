@@ -24,8 +24,7 @@ export async function POST(request: NextRequest) {
     const response = await agent.execute(prompt);
 
     return NextResponse.json({ response });
-  } catch (error) {
-    console.error('Error executing AI agent:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to execute AI agent' },
       { status: 500 }

@@ -15,8 +15,8 @@ export class SolanaClient {
     if (privateKey) {
       try {
         this.wallet = Keypair.fromSecretKey(bs58.decode(privateKey));
-      } catch (error) {
-        console.error('Failed to decode private key:', error);
+      } catch {
+        // Failed to decode private key - wallet will remain undefined
       }
     }
   }
@@ -96,8 +96,7 @@ export class SolanaClient {
 
       const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
       return balance || 0;
-    } catch (error) {
-      console.error('Error fetching token balance:', error);
+    } catch {
       return 0;
     }
   }

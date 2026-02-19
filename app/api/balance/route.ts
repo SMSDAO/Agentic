@@ -21,8 +21,7 @@ export async function GET(request: NextRequest) {
       balance,
       unit: 'SOL'
     });
-  } catch (error) {
-    console.error('Error fetching balance:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch balance' },
       { status: 500 }
