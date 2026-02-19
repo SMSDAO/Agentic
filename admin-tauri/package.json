@@ -1,0 +1,40 @@
+{
+  "name": "agentic-admin-tauri",
+  "version": "1.0.0",
+  "description": "Agentic Platform Admin Panel - Tauri Desktop App",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.7",
+    "@tauri-apps/api": "^1.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.26.0",
+    "lucide-react": "^0.469.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "recharts": "^2.15.0",
+    "zod": "^3.24.1",
+    "zustand": "^5.0.2",
+    "@noble/hashes": "^1.5.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.6.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.7.2",
+    "vite": "^5.0.8",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17"
+  }
+}
