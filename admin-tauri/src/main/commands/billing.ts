@@ -1,4 +1,4 @@
-import { supabase, BillingPlan, Fee } from '../supabase';
+import { supabase, BillingPlan } from '../supabase';
 
 // ============================================================================
 // Billing Plans

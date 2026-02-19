@@ -58,7 +58,7 @@ const UsersScreen: React.FC = () => {
                 <td>
                   <span className="badge badge-info capitalize">{user.plan}</span>
                 </td>
-                <td className="text-gray-400">{user.credits.toLocaleString()}</td>
+                <td className="text-gray-400">{Number(user.credits).toLocaleString()}</td>
                 <td>
                   <span
                     className={`badge ${

@@ -256,10 +256,17 @@ CREATE TABLE IF NOT EXISTS public.fee_overrides (
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    CHECK ((agent_id IS NOT NULL AND user_id IS NULL) OR (agent_id IS NULL AND user_id IS NOT NULL)),
-    UNIQUE(fee_type, agent_id) WHERE agent_id IS NOT NULL,
-    UNIQUE(fee_type, user_id) WHERE user_id IS NOT NULL
+    CHECK ((agent_id IS NOT NULL AND user_id IS NULL) OR (agent_id IS NULL AND user_id IS NOT NULL))
 );
+
+-- Create partial unique indexes for fee_overrides (instead of inline UNIQUE constraints with WHERE)
+CREATE UNIQUE INDEX IF NOT EXISTS idx_fee_overrides_agent_unique 
+    ON public.fee_overrides(fee_type, agent_id) 
+    WHERE agent_id IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_fee_overrides_user_unique 
+    ON public.fee_overrides(fee_type, user_id) 
+    WHERE user_id IS NOT NULL;
 
 -- ============================================================================
 -- 5. WALLET CONNECTORS TABLE

@@ -51,8 +51,8 @@ const FeesScreen: React.FC = () => {
             {fees.map((fee) => (
               <tr key={fee.id}>
                 <td className="font-medium text-white capitalize">{fee.fee_type}</td>
-                <td className="text-gray-400">${fee.amount.toFixed(4)}</td>
-                <td className="text-gray-400">{fee.percentage ? `${fee.percentage}%` : 'N/A'}</td>
+                <td className="text-gray-400">${Number(fee.amount).toFixed(4)}</td>
+                <td className="text-gray-400">{fee.percentage ? `${Number(fee.percentage)}%` : 'N/A'}</td>
                 <td className="text-gray-400">{fee.description}</td>
                 <td>
                   <span className={`badge ${fee.active ? 'badge-success' : 'badge-danger'}`}>

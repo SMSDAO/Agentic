@@ -38,7 +38,7 @@ export async function checkDatabaseConnection(
     // TODO: Implement actual connection check
     // This would test the Supabase connection
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

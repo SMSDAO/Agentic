@@ -23,7 +23,8 @@
     "date-fns": "^4.1.0",
     "recharts": "^2.15.0",
     "zod": "^3.24.1",
-    "zustand": "^5.0.2"
+    "zustand": "^5.0.2",
+    "@noble/hashes": "^1.5.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.6.0",

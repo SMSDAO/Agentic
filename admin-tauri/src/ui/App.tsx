@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import AgentsScreen from './screens/Agents/AgentsScreen';
 import UsersScreen from './screens/Users/UsersScreen';
@@ -15,7 +15,7 @@ import SettingsScreen from './screens/Settings/SettingsScreen';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Layout>
         <Routes>
           <Route path="/" element={<Navigate to="/agents" replace />} />
@@ -32,7 +32,7 @@ function App() {
           <Route path="/settings" element={<SettingsScreen />} />
         </Routes>
       </Layout>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

@@ -52,7 +52,11 @@ const WalletsScreen: React.FC = () => {
                 <td className="font-medium text-white">{connector.display_name}</td>
                 <td className="text-gray-400 capitalize">{connector.connector_type}</td>
                 <td className="text-gray-400 text-sm font-mono">
-                  {connector.config.rpc_endpoint?.substring(0, 40) || 'N/A'}...
+                  {connector.config.rpc_endpoint 
+                    ? (connector.config.rpc_endpoint.length > 40 
+                      ? `${connector.config.rpc_endpoint.substring(0, 40)}...` 
+                      : connector.config.rpc_endpoint)
+                    : 'N/A'}
                 </td>
                 <td>
                   <span className={`badge ${connector.enabled ? 'badge-success' : 'badge-danger'}`}>

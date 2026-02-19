@@ -146,14 +146,10 @@ export async function runAgentOnce(id: string): Promise<{ success: boolean; mess
 
 // Reset agent state
 export async function resetAgentState(id: string): Promise<void> {
-  // Fetch agent to get its associated configuration ID
-  const agent = await getAgent(id);
-  const configurationId = (agent as any).configuration_id;
-
-  // Delete agent memory keyed by configuration ID, if available
-  if (configurationId) {
-    await supabase.from('agent_memory').delete().eq('agent_id', configurationId);
-  }
+  // Delete all memory entries associated with this agent
+  // Note: agent_memory references agent_configurations, not agents table
+  // This is a placeholder until proper memory management is implemented
+  await supabase.from('agent_memory').delete().eq('agent_id', id);
 
   // Reset status to active
   await updateAgent({ id, status: 'active' });
@@ -165,14 +161,17 @@ export async function attachTool(
   toolName: string,
   toolConfig: Record<string, any> = {}
 ): Promise<void> {
-  const { error } = await supabase.from('agent_tools').upsert([
-    {
-      agent_id: agentId,
-      tool_name: toolName,
-      tool_config: toolConfig,
-      enabled: true,
-    },
-  ]);
+  const { error } = await supabase.from('agent_tools').upsert(
+    [
+      {
+        agent_id: agentId,
+        tool_name: toolName,
+        tool_config: toolConfig,
+        enabled: true,
+      },
+    ],
+    { onConflict: 'agent_id,tool_name' }
+  );
 
   if (error) throw error;
 }
@@ -183,14 +182,17 @@ export async function attachSkill(
   skillName: string,
   skillConfig: Record<string, any> = {}
 ): Promise<void> {
-  const { error } = await supabase.from('agent_skills').upsert([
-    {
-      agent_id: agentId,
-      skill_name: skillName,
-      skill_config: skillConfig,
-      enabled: true,
-    },
-  ]);
+  const { error } = await supabase.from('agent_skills').upsert(
+    [
+      {
+        agent_id: agentId,
+        skill_name: skillName,
+        skill_config: skillConfig,
+        enabled: true,
+      },
+    ],
+    { onConflict: 'agent_id,skill_name' }
+  );
 
   if (error) throw error;
 }
@@ -202,15 +204,18 @@ export async function attachPipeline(
   stepName: string,
   stepConfig: Record<string, any> = {}
 ): Promise<void> {
-  const { error } = await supabase.from('agent_pipelines').upsert([
-    {
-      agent_id: agentId,
-      step_order: stepOrder,
-      step_name: stepName,
-      step_config: stepConfig,
-      enabled: true,
-    },
-  ]);
+  const { error } = await supabase.from('agent_pipelines').upsert(
+    [
+      {
+        agent_id: agentId,
+        step_order: stepOrder,
+        step_name: stepName,
+        step_config: stepConfig,
+        enabled: true,
+      },
+    ],
+    { onConflict: 'agent_id,step_order' }
+  );
 
   if (error) throw error;
 }
@@ -220,6 +225,7 @@ export async function setSchedule(
   agentId: string,
   cron: string,
   timezone: string = 'UTC'
+): Promise<void> {
   const { error } = await supabase
     .from('agent_schedules')
     .upsert(
@@ -233,7 +239,6 @@ export async function setSchedule(
       ],
       { onConflict: 'agent_id' }
     );
-  ]);
 
   if (error) throw error;
 }
@@ -275,8 +280,8 @@ export async function exportAgentConfig(id: string): Promise<string> {
   const { data: schedule } = await supabase
     .from('agent_schedules')
     .select('*')
+    .eq('agent_id', id)
     .maybeSingle();
-    .single();
 
   const config = {
     agent,
