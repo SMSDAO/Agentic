@@ -1,0 +1,53 @@
+name: Mobile & Desktop Build Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  mobile-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Mobile Deps
+        run: cd mobile && npm install
+      - name: Expo Build Check
+        run: cd mobile && npx expo export --platform web
+
+  desktop-check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Desktop Deps
+        run: cd desktop && npm install
+      - name: Electron Forge Check
+        run: cd desktop && npm run package
+
+  tauri-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install WebKit2Gtk
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Admin Deps
+        run: cd admin-tauri && npm install
+      - name: Tauri Build Check
+        run: cd admin-tauri && npm run tauri:build
