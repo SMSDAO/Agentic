@@ -24,7 +24,7 @@
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "ai": "^3.0.0",
+    "ai": "^6.0.90",
     "langchain": "^1.2.24",
     "@langchain/core": "^1.1.8",
     "@langchain/openai": "^1.2.7",
