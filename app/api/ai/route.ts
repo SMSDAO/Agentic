@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
     const response = await agent.execute(prompt);
 
     return NextResponse.json({ response });
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error in /api/ai route while executing AI agent:', error);
     return NextResponse.json(
       { error: 'Failed to execute AI agent' },
       { status: 500 }

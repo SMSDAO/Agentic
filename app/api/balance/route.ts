@@ -21,7 +21,9 @@ export async function GET(request: NextRequest) {
       balance,
       unit: 'SOL'
     });
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching balance:', error);
     return NextResponse.json(
       { error: 'Failed to fetch balance' },
       { status: 500 }

@@ -34,7 +34,9 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data);
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching market data:', error);
     return NextResponse.json(
       { error: 'Failed to fetch market data' },
       { status: 500 }

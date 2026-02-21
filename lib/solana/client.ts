@@ -96,8 +96,10 @@ export class SolanaClient {
 
       const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
       return balance || 0;
-    } catch {
-      return 0;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching token balance:', error);
+      throw error;
     }
   }
 

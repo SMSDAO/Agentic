@@ -25,7 +25,6 @@
     "@solana/web3.js": "^1.95.8",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.45.7",
-    "ai": "^3.0.0",
     "axios": "^1.7.9",
     "bs58": "^6.0.0",
     "clsx": "^2.1.1",
