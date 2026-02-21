@@ -29,7 +29,9 @@ export async function validateNFTOwnership(
         Number(info?.tokenAmount?.uiAmount) > 0
       );
     });
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('NFT ownership validation error:', error);
     return false;
   }
 }

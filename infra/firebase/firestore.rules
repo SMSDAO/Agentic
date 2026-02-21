@@ -16,6 +16,7 @@ service cloud.firestore {
     }
 
     function isValidWallet(walletAddress) {
+      // Solana addresses are base58-encoded 32-byte public keys (32–44 chars)
       return walletAddress is string && walletAddress.size() >= 32 && walletAddress.size() <= 44;
     }
 

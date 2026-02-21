@@ -6,14 +6,15 @@ import OpenAI from 'openai';
  */
 export async function createOpenAIStream(
   prompt: string,
-  apiKey?: string
+  apiKey?: string,
+  model: string = 'gpt-4'
 ): Promise<ReadableStream<Uint8Array>> {
   const client = new OpenAI({
     apiKey: apiKey ?? process.env.OPENAI_API_KEY,
   });
 
   const stream = await client.chat.completions.create({
-    model: 'gpt-4',
+    model,
     messages: [{ role: 'user', content: prompt }],
     stream: true,
   });
