@@ -3,7 +3,6 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
   images: {
-    domains: ['arweave.net', 'ipfs.io', 'nftstorage.link'],
     remotePatterns: [
       {
         protocol: 'https',
