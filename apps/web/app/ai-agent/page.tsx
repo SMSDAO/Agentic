@@ -134,17 +134,17 @@ export default function AIAgentPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Vercel AI SDK</CardTitle>
+              <CardTitle>OpenAI Integration</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-400 mb-4">
-                Framework-agnostic AI integration
+                Direct OpenAI API integration for LLM-powered agents
               </p>
               <ul className="space-y-2 text-sm text-gray-300">
-                <li>• Quick setup</li>
-                <li>• Multiple providers</li>
-                <li>• Real-time streaming</li>
-                <li>• Type-safe</li>
+                <li>• Supports multiple OpenAI models</li>
+                <li>• Streaming responses</li>
+                <li>• Structured output handling</li>
+                <li>• Secure API key management</li>
               </ul>
             </CardContent>
           </Card>
