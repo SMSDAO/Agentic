@@ -85,6 +85,7 @@ export default function HomePage() {
               href="https://github.com/SMSDAO/Agentic" 
               target="_blank"
               rel="noopener noreferrer"
+              rel="noopener noreferrer"
               className="px-6 py-3 rounded-xl font-semibold glass hover:bg-white/10 transition-all duration-300"
             >
               View on GitHub
