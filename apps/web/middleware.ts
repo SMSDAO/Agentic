@@ -32,8 +32,9 @@ function isRateLimited(key: string): boolean {
 
 const CSP = [
   "default-src 'self'",
-  // Note: 'unsafe-inline' is required for Next.js inline styles; consider nonces for stricter enforcement
+  // 'unsafe-inline' is required for Next.js runtime scripts and hydration; migrate to nonces for stricter enforcement
   "script-src 'self' 'unsafe-inline'",
+  // 'unsafe-inline' is required for Tailwind/CSS-in-JS inline styles
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self'",
