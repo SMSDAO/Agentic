@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ response });
   } catch (error) {
     // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
     console.error('Error executing AI agent:', error);
     return NextResponse.json(
       { error: 'Failed to execute AI agent' },
