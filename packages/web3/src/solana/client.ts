@@ -15,8 +15,9 @@ export class SolanaClient {
     if (privateKey) {
       try {
         this.wallet = Keypair.fromSecretKey(bs58.decode(privateKey));
-      } catch (error) {
-        console.error('Failed to decode private key:', error);
+      } catch {
+        // Invalid private key - wallet will be unavailable; caller must handle this
+        throw new Error('Failed to decode private key: ensure SOLANA_PRIVATE_KEY is a valid base58-encoded secret key');
       }
     }
   }
@@ -86,20 +87,19 @@ export class SolanaClient {
   }
 
   async getTokenBalance(tokenAddress: string, ownerAddress: string): Promise<number> {
-    try {
-      const tokenAccounts = await this.connection.getParsedTokenAccountsByOwner(
-        new PublicKey(ownerAddress),
-        { mint: new PublicKey(tokenAddress) }
-      );
+    const tokenAccounts = await this.connection.getParsedTokenAccountsByOwner(
+      new PublicKey(ownerAddress),
+      { mint: new PublicKey(tokenAddress) }
+    );
 
-      if (tokenAccounts.value.length === 0) return 0;
+    if (tokenAccounts.value.length === 0) return 0;
 
-      const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-      return balance || 0;
-    } catch (error) {
-      console.error('Error fetching token balance:', error);
-      return 0;
+    const uiAmount =
+      tokenAccounts.value[0].account.data.parsed?.info?.tokenAmount?.uiAmount;
+    if (uiAmount == null) {
+      throw new Error('Unable to parse token balance from account data');
     }
+    return uiAmount;
   }
 
   getConnection(): Connection {

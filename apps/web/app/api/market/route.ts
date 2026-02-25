@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       case 'gainers':
         data = await client.getTopGainers(10);
         break;
-      case 'price':
+      case 'price': {
         const tokenId = searchParams.get('tokenId');
         if (!tokenId) {
           return NextResponse.json(
@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
         }
         data = await client.getPrice(tokenId);
         break;
+      }
       default:
         return NextResponse.json(
           { error: 'Invalid endpoint' },

@@ -2,6 +2,8 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  // Transpile workspace packages that ship TypeScript source
+  transpilePackages: ['@agentic/ui', '@agentic/shared', '@agentic/web3', '@agentic/ai'],
   images: {
     remotePatterns: [
       {
@@ -22,7 +24,13 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', process.env.NEXT_PUBLIC_APP_URL].filter(Boolean),
+      // Extract hostname:port from NEXT_PUBLIC_APP_URL so origins are consistent
+      allowedOrigins: [
+        'localhost:3000',
+        process.env.NEXT_PUBLIC_APP_URL
+          ? new URL(process.env.NEXT_PUBLIC_APP_URL).host
+          : null,
+      ].filter(Boolean),
     },
   },
 };

@@ -24,9 +24,13 @@ class GetTokenBalanceTool extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      const [tokenAddress, ownerAddress] = input.split(',');
+      const parts = input.split(',').map((p) => p.trim());
+      if (parts.length < 2 || !parts[0] || !parts[1]) {
+        return 'Error: Input must be in format: tokenAddress,ownerAddress';
+      }
+      const [tokenAddress, ownerAddress] = parts;
       const client = createSolanaClient();
-      const balance = await client.getTokenBalance(tokenAddress.trim(), ownerAddress.trim());
+      const balance = await client.getTokenBalance(tokenAddress, ownerAddress);
       return `Token Balance: ${balance}`;
     } catch (error) {
       return `Error getting token balance: ${error}`;

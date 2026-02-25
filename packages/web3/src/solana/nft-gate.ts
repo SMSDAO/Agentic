@@ -2,11 +2,15 @@ import { Connection, PublicKey } from '@solana/web3.js';
 
 /**
  * Server-side NFT ownership validation for access gating.
+ * Checks whether a wallet holds at least one token with the given mint address.
  * Must only be called from server-side code (API routes, Server Actions).
+ *
+ * @param walletAddress - The wallet public key to check
+ * @param nftMint - The specific NFT mint address to check ownership of
  */
 export async function validateNFTOwnership(
   walletAddress: string,
-  collectionMint: string,
+  nftMint: string,
   rpcUrl?: string
 ): Promise<boolean> {
   try {
@@ -20,12 +24,12 @@ export async function validateNFTOwnership(
       programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
     });
 
-    const collectionKey = new PublicKey(collectionMint);
+    const mintKey = new PublicKey(nftMint);
 
     return tokenAccounts.value.some((account) => {
       const info = account.account.data.parsed?.info;
       return (
-        info?.mint === collectionKey.toString() &&
+        info?.mint === mintKey.toString() &&
         Number(info?.tokenAmount?.uiAmount) > 0
       );
     });
