@@ -5,9 +5,9 @@ export async function POST(request: NextRequest) {
   try {
     const { prompt } = await request.json();
 
-    if (!prompt) {
+    if (typeof prompt !== 'string' || prompt.trim().length === 0) {
       return NextResponse.json(
-        { error: 'Prompt is required' },
+        { error: 'Prompt must be a non-empty string' },
         { status: 400 }
       );
     }
