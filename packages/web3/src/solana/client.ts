@@ -61,8 +61,17 @@ export class SolanaClient {
     return mint;
   }
 
+  /**
+   * Mint tokens to a destination account.
+   * @param payer - Keypair to pay transaction fees
+   * @param mintAuthority - Keypair that has authority to mint tokens (may differ from payer)
+   * @param mint - The mint address
+   * @param destination - The destination wallet public key
+   * @param amount - Amount to mint (in smallest unit)
+   */
   async mintTokens(
     payer: Keypair,
+    mintAuthority: Keypair,
     mint: PublicKey,
     destination: PublicKey,
     amount: number
@@ -79,7 +88,7 @@ export class SolanaClient {
       payer,
       mint,
       tokenAccount.address,
-      payer,
+      mintAuthority,
       amount
     );
 

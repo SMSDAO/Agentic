@@ -24,13 +24,19 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      // Extract hostname:port from NEXT_PUBLIC_APP_URL so origins are consistent
-      allowedOrigins: [
-        'localhost:3000',
-        process.env.NEXT_PUBLIC_APP_URL
-          ? new URL(process.env.NEXT_PUBLIC_APP_URL).host
-          : null,
-      ].filter(Boolean),
+      // Extract hostname:port from NEXT_PUBLIC_APP_URL so origins are consistent.
+      // Must be an absolute URL (e.g. https://example.com); falls back to localhost only.
+      allowedOrigins: (() => {
+        const origins = ['localhost:3000'];
+        if (process.env.NEXT_PUBLIC_APP_URL) {
+          try {
+            origins.push(new URL(process.env.NEXT_PUBLIC_APP_URL).host);
+          } catch {
+            // Invalid URL — ignore; fix NEXT_PUBLIC_APP_URL to include the scheme
+          }
+        }
+        return origins;
+      })(),
     },
   },
 };

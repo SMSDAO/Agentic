@@ -9,14 +9,10 @@
     "NEXT_PUBLIC_SUPABASE_URL": "@supabase-url",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase-anon-key",
     "NEXT_PUBLIC_SOLANA_NETWORK": "mainnet-beta",
-    "NEXT_PUBLIC_APP_URL": "@app-url"
-  },
-  "build": {
-    "env": {
-      "OPENAI_API_KEY": "@openai-api-key",
-      "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
-      "SOLANA_PRIVATE_KEY": "@solana-private-key"
-    }
+    "NEXT_PUBLIC_APP_URL": "@app-url",
+    "OPENAI_API_KEY": "@openai-api-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
+    "SOLANA_PRIVATE_KEY": "@solana-private-key"
   },
   "rewrites": [
     {
