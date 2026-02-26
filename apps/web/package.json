@@ -1,22 +1,19 @@
 {
-  "name": "agentic-monorepo",
+  "name": "@agentic/web",
+  "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "supabase:start": "supabase start",
-    "supabase:stop": "supabase stop",
-    "supabase:status": "supabase status",
-    "mobile": "cd mobile && npm start",
-    "desktop": "cd desktop && npm run dev"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@agentic/ui": "*",
+    "@agentic/shared": "*",
+    "@agentic/web3": "*",
+    "@agentic/ai": "*",
     "@solana/web3.js": "^1.95.8",
     "@solana/spl-token": "^0.4.9",
     "@metaplex-foundation/js": "^0.20.1",
@@ -27,11 +24,10 @@
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "ai": "^6.0.90",
     "langchain": "^1.2.24",
     "@langchain/core": "^1.1.8",
     "@langchain/openai": "^1.2.7",
-    "@langchain/community": "^1.1.18",
+    "@langchain/community": "^1.1.15",
     "openai": "^4.77.3",
     "bs58": "^6.0.0",
     "axios": "^1.7.9",
