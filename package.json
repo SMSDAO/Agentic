@@ -28,7 +28,7 @@
     "langchain": "^1.2.24",
     "@langchain/core": "^1.1.8",
     "@langchain/openai": "^1.2.7",
-    "@langchain/community": "^1.1.15",
+    "@langchain/community": "^1.1.18",
     "openai": "^4.77.3",
     "bs58": "^6.0.0",
     "axios": "^1.7.9",
