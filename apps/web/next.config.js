@@ -5,11 +5,14 @@ const nextConfig = {
   // Transpile workspace packages that ship TypeScript source
   transpilePackages: ['@agentic/ui', '@agentic/shared', '@agentic/web3', '@agentic/ai'],
   images: {
+    // Restrict to known image hosts; add more as required rather than allowing '*'
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'arweave.net' },
+      { protocol: 'https', hostname: '*.arweave.net' },
+      { protocol: 'https', hostname: 'nftstorage.link' },
+      { protocol: 'https', hostname: '*.ipfs.nftstorage.link' },
+      { protocol: 'https', hostname: 'ipfs.io' },
+      { protocol: 'https', hostname: 'raw.githubusercontent.com' },
     ],
   },
   webpack: (config) => {

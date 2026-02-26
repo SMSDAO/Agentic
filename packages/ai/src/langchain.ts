@@ -13,7 +13,7 @@ class GetBalanceTool extends Tool {
       const balance = await client.getBalance(address);
       return `Balance: ${balance} SOL`;
     } catch (error) {
-      return `Error getting balance: ${error}`;
+      return `Error getting balance: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
 }
@@ -33,7 +33,7 @@ class GetTokenBalanceTool extends Tool {
       const balance = await client.getTokenBalance(tokenAddress, ownerAddress);
       return `Token Balance: ${balance}`;
     } catch (error) {
-      return `Error getting token balance: ${error}`;
+      return `Error getting token balance: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
 }

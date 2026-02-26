@@ -20,18 +20,15 @@ export async function validateNFTOwnership(
     );
 
     const owner = new PublicKey(walletAddress);
+    // Filter by mint directly in the RPC call to avoid fetching all token accounts
+    const mintKey = new PublicKey(nftMint);
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(owner, {
-      programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
+      mint: mintKey,
     });
 
-    const mintKey = new PublicKey(nftMint);
-
     return tokenAccounts.value.some((account) => {
-      const info = account.account.data.parsed?.info;
-      return (
-        info?.mint === mintKey.toString() &&
-        Number(info?.tokenAmount?.uiAmount) > 0
-      );
+      const uiAmount = account.account.data.parsed?.info?.tokenAmount?.uiAmount;
+      return Number(uiAmount) > 0;
     });
   } catch (error) {
     // eslint-disable-next-line no-console

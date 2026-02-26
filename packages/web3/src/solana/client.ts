@@ -103,12 +103,16 @@ export class SolanaClient {
 
     if (tokenAccounts.value.length === 0) return 0;
 
-    const uiAmount =
-      tokenAccounts.value[0].account.data.parsed?.info?.tokenAmount?.uiAmount;
-    if (uiAmount == null) {
-      throw new Error('Unable to parse token balance from account data');
+    // Sum across all accounts — a wallet can have multiple token accounts for the same mint
+    let total = 0;
+    for (const account of tokenAccounts.value) {
+      const uiAmount = account.account.data.parsed?.info?.tokenAmount?.uiAmount;
+      if (uiAmount == null) {
+        throw new Error('Unable to parse token balance from account data');
+      }
+      total += uiAmount;
     }
-    return uiAmount;
+    return total;
   }
 
   getConnection(): Connection {
