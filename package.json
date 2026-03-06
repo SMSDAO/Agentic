@@ -7,11 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "supabase:status": "supabase status",
-    "mobile": "cd mobile && npm start",
-    "desktop": "cd desktop && npm run dev"
+    "supabase:status": "supabase status"
   },
   "dependencies": {
     "@solana/web3.js": "^1.95.8",
@@ -53,6 +53,6 @@
     "eslint-config-next": "^15.1.4"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=20 <25"
   }
 }
