@@ -10,6 +10,8 @@ jobs:
   lint-and-check:
     name: Type-check, lint, and build (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: ['20', '22']
