@@ -1,53 +1,22 @@
-name: Mobile & Desktop Build Check
+name: Platform Isolation Notice
+
+# Non-web platform builds have been moved to dedicated repositories:
+#   SMSDAO/Agentic-Admin    — Tauri desktop admin panel
+#   SMSDAO/Agentic-Desktop  — Electron desktop application
+#   SMSDAO/Agentic-Mobile   — React Native / Expo mobile app
+#
+# This workflow is intentionally a no-op. CI for this repository is handled
+# exclusively by web-build.yml, security-audit.yml, ai-integration-test.yml,
+# and blockchain-test.yml.
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  mobile-check:
+  notice:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Install Mobile Deps
-        run: cd mobile && npm install
-      - name: Expo Build Check
-        run: cd mobile && npx expo export --platform web
-
-  desktop-check:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Install Desktop Deps
-        run: cd desktop && npm install
-      - name: Electron Forge Check
-        run: cd desktop && npm run package
-
-  tauri-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Install WebKit2Gtk
+      - name: Platform isolation notice
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Install Admin Deps
-        run: cd admin-tauri && npm install
-      - name: Tauri Build Check
-        run: cd admin-tauri && npm run tauri:build
+          echo "Mobile and desktop builds have been moved to dedicated repositories."
+          echo "See organization-map.json for repository locations."
