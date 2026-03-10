@@ -1,6 +1,6 @@
 # Tests
 
-This directory contains the automated test suite for the Agentic web platform.
+This directory is reserved for the automated test suite for the Agentic web platform.
 
 ## Structure
 
@@ -11,26 +11,18 @@ tests/
 │   ├── lib/        Library utility tests
 │   └── config/     Configuration tests
 ├── integration/    Integration tests for API routes
-└── e2e/            End-to-end tests (Playwright)
+└── e2e/            End-to-end tests
 ```
 
-## Running Tests
+## Status
 
-```bash
-npm run test
-```
+Tests have not been added yet. A test runner (e.g. Jest or Vitest) needs to be configured before adding test files. When a test runner is chosen:
+- Add it to `devDependencies` in `package.json`
+- Add a `test` script to `package.json`
+- Update this README with the chosen conventions
 
-## Writing Tests
+## Planned Conventions
 
-Tests use Jest. Follow these conventions:
 - Test files: `*.test.ts` or `*.spec.ts`
 - Mocks: `__mocks__/` directories adjacent to the module being mocked
 - Fixtures: `tests/fixtures/`
-
-## Coverage
-
-Run with coverage:
-
-```bash
-npm run test -- --coverage
-```

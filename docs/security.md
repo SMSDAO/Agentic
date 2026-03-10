@@ -27,7 +27,7 @@
 - Private keys are loaded from environment variables server-side only
 - The `SOLANA_PRIVATE_KEY` env var is validated at startup via `lib/env.ts`
 - Keys are decoded in `lib/solana/client.ts` constructor and kept in memory only
-- Private key decoding errors throw immediately (no silent failures)
+- Private key decoding errors are logged; the process continues running, but Solana operations requiring a wallet may fail at runtime
 
 ### Wallet Signature Verification
 - All wallet-authenticated actions must verify a signature before processing

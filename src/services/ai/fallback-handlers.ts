@@ -34,6 +34,9 @@ export class FallbackChain<T> {
   }
 
   async execute(): Promise<T> {
+    if (this.providers.length === 0) {
+      throw new Error('FallbackChain has no providers. Add at least one with .add()');
+    }
     let lastError: unknown;
     for (const provider of this.providers) {
       try {
@@ -42,6 +45,6 @@ export class FallbackChain<T> {
         lastError = err;
       }
     }
-    throw lastError;
+    throw lastError instanceof Error ? lastError : new Error(String(lastError), { cause: lastError });
   }
 }

@@ -1,8 +1,12 @@
 /**
  * Direct OpenAI service — use for simple completions and image generation
  * without LangChain overhead.
+ *
+ * Server-only: reads OPENAI_API_KEY from process.env and imports the Node
+ * OpenAI SDK. Do not import from client components.
  */
 
+import 'server-only';
 import OpenAI from 'openai';
 
 export interface CompletionOptions {
