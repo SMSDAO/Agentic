@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    permissions:
+      contents: read
     steps:
       - name: Platform isolation notice
         run: |
