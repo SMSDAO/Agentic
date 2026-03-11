@@ -23,12 +23,16 @@ cp .env.example .env.local
 
 ## Environment Variables
 
-See `.env.example` for all required variables. Minimum for local development:
+See `.env.example` for all required variables. Minimum for local development (including Supabase and Solana integrations):
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
 NEXT_PUBLIC_SOLANA_NETWORK=devnet
+NEXT_PUBLIC_SOLANA_RPC_URL=https://api.devnet.solana.com
+SOLANA_PRIVATE_KEY=your-solana-private-key
 OPENAI_API_KEY=sk-...
 ```
 
