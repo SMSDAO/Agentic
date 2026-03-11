@@ -15,6 +15,16 @@ The service layer lives in `src/services/ai/`:
 | `rate-limiting.ts` | API call protection |
 | `fallback-handlers.ts` | Error recovery |
 
+### Entry points
+
+| Import path | Guard | Use in |
+|-------------|-------|--------|
+| `@/services/ai` | `server-only` | Server components, API routes, Server Actions |
+| `@/services/ai/utils` | *(none)* | Server **and** client components |
+
+`@/services/ai` re-exports everything — use it in server-only code.  
+`@/services/ai/utils` exports only client-safe utilities (prompt helpers, token tracking, rate limiting, fallback) — no environment variables or Node-only SDKs.
+
 ## LangChain Solana Agent
 
 ```typescript
@@ -51,8 +61,11 @@ const urls = await ai.generateImage('Solana blockchain visualization', {
 
 ## Prompt Engineering
 
+These utilities are **client-safe** — import from `@/services/ai/utils` in both server
+and client components:
+
 ```typescript
-import { buildSystemPrompt, optimizePrompt, truncateToTokenLimit } from '@/services/ai';
+import { buildSystemPrompt, optimizePrompt, truncateToTokenLimit } from '@/services/ai/utils';
 
 const systemPrompt = buildSystemPrompt({
   network: 'mainnet-beta',
@@ -67,7 +80,7 @@ const safe = truncateToTokenLimit(prompt, 2048);
 ## Rate Limiting
 
 ```typescript
-import { createRateLimiter } from '@/services/ai';
+import { createRateLimiter } from '@/services/ai/utils';
 
 const limiter = createRateLimiter({ maxRequests: 10, windowMs: 60_000 });
 const result = limiter.check(userIp);
@@ -81,7 +94,7 @@ if (!result.allowed) {
 ## Fallback Handling
 
 ```typescript
-import { withFallback, FallbackChain } from '@/services/ai';
+import { withFallback, FallbackChain } from '@/services/ai/utils';
 
 const result = await withFallback(
   () => gpt4Service.complete(prompt),
