@@ -53,13 +53,13 @@
 
 ## Content Security Policy
 
-The following CSP headers are set in `src/app/middleware.ts`:
+The application does **not** currently configure a custom Content Security Policy in middleware. When you add CSP middleware (for example in `src/app/middleware.ts`), you should set headers such as:
 
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `X-XSS-Protection: 1; mode=block`
 
-Note: `'unsafe-inline'` is currently required for Next.js inline styles.
+If you enable a stricter CSP, note that `'unsafe-inline'` may be required for certain Next.js inline styles unless you refactor them.
 
 ## Admin System Isolation
 
