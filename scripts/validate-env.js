@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 /**
  * validate-env.js — Validates required environment variables before build.
  * Run: node scripts/validate-env.js
@@ -8,6 +9,7 @@ const required = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'NEXT_PUBLIC_SOLANA_NETWORK',
+  'NEXT_PUBLIC_SOLANA_RPC_URL',
   'OPENAI_API_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'SOLANA_PRIVATE_KEY',

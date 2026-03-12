@@ -76,7 +76,7 @@
   },
   "security": {
     "secrets_management": "Vercel dashboard environment variables",
-    "api_security": "Middleware-based rate limiting + CSP headers",
+    "api_security": "Basic Next.js API routing; middleware rate limiting and CSP headers planned",
     "blockchain_security": "Private keys never in source code or vercel.json",
     "admin_isolation": "Admin panels in separate repositories"
   },

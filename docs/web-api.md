@@ -62,13 +62,33 @@ Fetch the SOL balance for a Solana wallet address.
 
 Fetch current cryptocurrency market data from CoinGecko.
 
-**Response (200)**
+**Query Parameters**
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `endpoint` | `trending` | One of `trending`, `gainers`, or `price` |
+| `tokenId` | — | Required when `endpoint=price`; CoinGecko token ID |
+
+**Response (200) — endpoint=trending**
+
+Returns the raw CoinGecko `coins` array from the `/search/trending` endpoint:
 
 ```json
-{
-  "data": [...]
-}
+[
+  {
+    "item": {
+      "id": "solana",
+      "symbol": "sol",
+      "name": "Solana",
+      "...": "..."
+    }
+  }
+]
 ```
+
+**Response (200) — endpoint=gainers**
+
+Returns the raw CoinGecko `coins/markets` array (top gainers by 24 h price change).
 
 ## Error Format
 
@@ -82,4 +102,4 @@ All error responses follow this format:
 
 ## Rate Limiting
 
-API routes are protected by middleware-level rate limiting. Excessive requests return HTTP 429.
+Rate limiting is not currently enforced at the middleware level. `src/services/ai/rate-limiting.ts` provides a per-IP rate-limiting utility for use within individual API route handlers.

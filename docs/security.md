@@ -25,7 +25,7 @@
 
 ### Private Key Handling
 - Private keys are loaded from environment variables server-side only
-- The `SOLANA_PRIVATE_KEY` env var is validated at startup via `lib/env.ts`
+- `lib/env.ts` defines the env validation schema; import it in a server-side file (e.g. `src/lib/env.ts` is already set up) — add `import '@/lib/env'` to your Next.js server entry point or instrumentation file (`src/instrumentation.ts`) to enforce validation at startup
 - Keys are decoded in `lib/solana/client.ts` constructor and kept in memory only
 - Private key decoding errors are logged; the process continues running, but Solana operations requiring a wallet may fail at runtime
 
@@ -43,7 +43,7 @@
 
 ### API Key Exposure
 - `OPENAI_API_KEY` is server-side only; never accessible from the browser
-- Rate limiting is applied in `src/services/ai/rate-limiting.ts`
+- `src/services/ai/rate-limiting.ts` provides a rate-limiting utility; wire it into API route handlers to enforce per-IP limits
 - Input validation happens in API routes before reaching the AI layer
 
 ### Prompt Injection
@@ -53,7 +53,7 @@
 
 ## Content Security Policy
 
-The application does **not** currently configure a custom Content Security Policy in middleware. When you add CSP middleware (for example in `src/app/middleware.ts`), you should set headers such as:
+The application does **not** currently configure a custom Content Security Policy in middleware. When you add CSP middleware (for example in `src/middleware.ts` when using the `src/` layout, or `middleware.ts` at the project root), you should set headers such as:
 
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`

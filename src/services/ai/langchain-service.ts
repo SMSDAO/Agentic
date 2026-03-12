@@ -25,7 +25,9 @@ class GetBalanceTool extends Tool {
       const balance = await client.getBalance(address);
       return `Balance: ${balance} SOL`;
     } catch (error) {
-      return `Error getting balance: ${error}`;
+      // eslint-disable-next-line no-console
+      console.error('GetBalanceTool: error fetching balance', error);
+      return 'Error: unable to retrieve balance. Please try again.';
     }
   }
 }
@@ -50,7 +52,9 @@ class GetTokenBalanceTool extends Tool {
       const balance = await client.getTokenBalance(tokenAddress, ownerAddress);
       return `Token Balance: ${balance}`;
     } catch (error) {
-      return `Error getting token balance: ${error}`;
+      // eslint-disable-next-line no-console
+      console.error('GetTokenBalanceTool: error fetching token balance', error);
+      return 'Error: unable to retrieve token balance. Please try again.';
     }
   }
 }

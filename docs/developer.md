@@ -45,7 +45,6 @@ OPENAI_API_KEY=sk-...
 | `npm run start` | Start production server |
 | `npm run type-check` | TypeScript type checking |
 | `npm run lint` | ESLint linting |
-| `npm run test` | Run test suite |
 | `npm run supabase:start` | Start local Supabase |
 | `npm run supabase:stop` | Stop local Supabase |
 
@@ -97,11 +96,7 @@ import { getChainConfig, PROGRAMS } from '@/config/chains';
 
 ## Running Tests
 
-```bash
-npm run test
-```
-
-Tests live in `tests/` and follow Jest conventions.
+A test runner has not been configured yet. See `tests/README.md` for the current status and planned approach.
 
 ## Contributing
 
