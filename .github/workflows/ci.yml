@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint-and-check:
-    name: Type-check, lint, and build (Node ${{ matrix.node-version }})
+    name: Type-check, lint, build, and test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,5 +28,16 @@ jobs:
         run: npm run type-check
       - name: Lint
         run: npm run lint -- --max-warnings=0
+      - name: Unit tests
+        run: npm test
       - name: Build
         run: npm run build
+        env:
+          # Dummy values needed for env validation during build
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+          NEXT_PUBLIC_SOLANA_NETWORK: devnet
+          NEXT_PUBLIC_SOLANA_RPC_URL: https://api.devnet.solana.com
+          SUPABASE_SERVICE_ROLE_KEY: placeholder
+          SOLANA_PRIVATE_KEY: placeholder
+          OPENAI_API_KEY: placeholder

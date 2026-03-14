@@ -3,14 +3,15 @@
 A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered agents, and complete blockchain integration for the Solana ecosystem.
 
 ![Agentic Banner](https://img.shields.io/badge/Solana-Web3-blueviolet?style=for-the-badge)
-![Node](https://img.shields.io/badge/Node-24+-green?style=for-the-badge)
+![Node](https://img.shields.io/badge/Node-20%2B-green?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge)
+![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen?style=for-the-badge)
 
 ## ✨ Features
 
 ### 🎨 Frontend - Modern Neo Glow UI
-- **Next.js 14+ App Router** with TypeScript
+- **Next.js 15 App Router** with TypeScript
 - **Neo Glow Design System**: glowing borders, neon accents, glassmorphism
 - **Tailwind CSS** with custom glow utilities
 - Fully responsive (desktop, tablet, mobile)
@@ -62,7 +63,7 @@ A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered a
 - Full admin UI dashboard
 - System tray integration
 - Auto-update support
-- Node 24+ compatible
+- Node 20+ compatible
 
 ### ⛓️ Blockchain Features
 
@@ -134,45 +135,56 @@ A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered a
 ## 🏗️ Project Structure
 
 ```
-/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx
-│   ├── page.tsx
-│   ├── dashboard/         # Dashboard pages
-│   ├── tokens/            # Token operations
-│   ├── nfts/              # NFT management
-│   ├── defi/              # DeFi integrations
-│   ├── market/            # Market data
-│   ├── ai-agent/          # AI agent interface
-│   └── api/               # API routes
-├── admin-tauri/           # Tauri Admin Desktop App
-│   ├── src/
-│   │   ├── main/          # Backend logic (Supabase commands)
-│   │   └── ui/            # React frontend (11 admin screens)
-│   ├── src-tauri/         # Rust backend
-│   └── package.json
-├── components/            # Shared UI components
-│   ├── ui/                # Neo Glow components
-│   └── layout/            # Layout components
-├── lib/                   # Shared utilities
-│   ├── supabase/          # Supabase client & schemas
-│   ├── solana/            # Solana integrations
-│   ├── ai/                # LangChain & AI tools
-│   └── market/            # Market data (CoinGecko, Pyth)
-├── mobile/                # React Native/Expo app
-├── desktop/               # Electron desktop app
-├── supabase/              # Supabase migrations & config
-├── public/                # Static assets
-├── styles/                # Global styles & Neo Glow theme
-└── ...config files
+Agentic/
+├── src/                    # Next.js 15 web app (App Router)
+│   ├── app/               # Pages and API routes
+│   │   ├── layout.tsx     # Root layout with ErrorBoundary
+│   │   ├── page.tsx       # Home page
+│   │   ├── dashboard/     # Dashboard page
+│   │   ├── tokens/        # Token operations
+│   │   ├── nfts/          # NFT management
+│   │   ├── defi/          # DeFi integrations
+│   │   ├── market/        # Market data
+│   │   ├── ai-agent/      # AI agent chat interface
+│   │   └── api/           # API routes (ai, balance, market)
+│   ├── components/        # React components
+│   │   ├── ui/            # Button, Card, Input (Neo Glow)
+│   │   ├── layout/        # Navbar (responsive)
+│   │   └── ErrorBoundary  # React error boundary
+│   ├── lib/               # Server/client libraries
+│   │   ├── solana/        # Solana client, DeFi, NFT
+│   │   ├── ai/            # LangChain, DALL-E
+│   │   ├── market/        # CoinGecko client
+│   │   ├── supabase/      # Supabase client
+│   │   ├── env.ts         # Zod env validation
+│   │   └── utils.ts       # Shared utilities
+│   ├── services/ai/       # AI service layer
+│   │   ├── index.ts       # Server-only entry (server-only guard)
+│   │   ├── utils.ts       # Client-safe utilities
+│   │   ├── rate-limiting  # Request rate limiter
+│   │   ├── fallback-handlers # Provider fallback chain
+│   │   ├── token-tracking # OpenAI usage tracking
+│   │   └── prompt-optimization # Prompt engineering
+│   └── styles/            # globals.css (Neo Glow design system)
+├── admin-tauri/           # Tauri desktop admin panel
+│   ├── src/main/          # Supabase commands (TypeScript)
+│   ├── src/ui/screens/    # 11 admin screens (React)
+│   └── src-tauri/         # Rust backend
+├── mobile/                # React Native/Expo scaffold
+├── desktop/               # Electron scaffold
+├── config/                # Multi-chain configuration
+├── supabase/migrations/   # Database schema migrations
+├── tests/unit/            # Vitest unit tests (38 tests)
+├── docs/                  # Documentation suite
+└── .github/workflows/     # CI/CD pipelines
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 24+ (required)
-- npm or yarn
+- Node.js 20+ (required, supports 20–24)
+- npm 10+
 - Supabase account
 - Solana wallet
 - API keys (optional, see `.env.example`)
@@ -311,9 +323,23 @@ Add these in Vercel dashboard:
 ## 🛠️ Development
 
 ### Running Tests
-Automated tests are not yet configured for this project, and there is no `test` script defined in `package.json`.
+```bash
+# Run unit tests (38 tests)
+npm test
 
-To add tests, choose a test runner (for example, Jest, Vitest, or Playwright), set up the tooling, and then add an appropriate `test` script to `package.json`.
+# Watch mode
+npm run test:watch
+
+# With coverage report
+npm run test:coverage
+```
+
+Unit tests are located in `tests/unit/` and cover:
+- `lib/utils.ts` — `cn`, `formatNumber`, `shortenAddress`, `formatCurrency`
+- `services/ai/rate-limiting.ts` — `RateLimiter`, `createRateLimiter`
+- `services/ai/fallback-handlers.ts` — `withFallback`, `FallbackChain`
+- `services/ai/prompt-optimization.ts` — `buildSystemPrompt`, `optimizePrompt`, `truncateToTokenLimit`
+
 ### Linting
 ```bash
 npm run lint
