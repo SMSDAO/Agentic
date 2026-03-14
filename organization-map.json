@@ -1,0 +1,95 @@
+{
+  "repo": "SMSDAO/Agentic",
+  "purpose": "Multi-Platform AI Agent Platform",
+  "stack": "Next.js + Tauri + Electron + React Native",
+  "status": "PLATFORM_ISOLATION_IN_PROGRESS",
+  "security_score": "IMPROVING",
+  "build_status": "WEB_ONLY",
+  "dependency_health": "NORMALIZED",
+  "audit_date": "2026-03-06",
+  "platforms": {
+    "web": {
+      "framework": "Next.js 15",
+      "status": "ACTIVE",
+      "deployment": "Vercel",
+      "directory": "src/",
+      "description": "Primary web application — AI-powered Solana blockchain interface"
+    },
+    "desktop_tauri": {
+      "framework": "Tauri + Vite",
+      "status": "ISOLATED",
+      "deployment": "separate-repo",
+      "directory": "admin-tauri/",
+      "target_repo": "SMSDAO/Agentic-Admin",
+      "description": "Admin desktop application — Tauri-based"
+    },
+    "desktop_electron": {
+      "framework": "Electron Forge",
+      "status": "ISOLATED",
+      "deployment": "separate-repo",
+      "directory": "desktop/",
+      "target_repo": "SMSDAO/Agentic-Desktop",
+      "description": "Admin desktop application — Electron-based"
+    },
+    "mobile": {
+      "framework": "React Native + Expo",
+      "status": "ISOLATED",
+      "deployment": "separate-repo",
+      "directory": "mobile/",
+      "target_repo": "SMSDAO/Agentic-Mobile",
+      "description": "Mobile application — Expo managed workflow"
+    }
+  },
+  "web_services": {
+    "ai": {
+      "providers": ["LangChain", "OpenAI GPT-4"],
+      "location": "src/services/ai/",
+      "features": ["solana-agent", "prompt-optimization", "token-tracking", "rate-limiting"]
+    },
+    "blockchain": {
+      "network": "Solana",
+      "libraries": ["@solana/web3.js", "@solana/spl-token", "@metaplex-foundation/js", "@coral-xyz/anchor"],
+      "location": "src/lib/solana/",
+      "config": "config/chains.ts"
+    },
+    "database": {
+      "provider": "Supabase",
+      "location": "src/lib/supabase/"
+    },
+    "market_data": {
+      "provider": "CoinGecko",
+      "location": "src/lib/market/"
+    }
+  },
+  "structure": {
+    "src/app": "Next.js App Router pages and API routes",
+    "src/components": "Reusable React components",
+    "src/lib": "Utility libraries and integrations",
+    "src/services": "Service layer (AI, Web3, etc.)",
+    "src/styles": "Global CSS and design tokens",
+    "config": "Platform configuration files",
+    "docs": "Project documentation",
+    "tests": "Automated test suites",
+    "scripts": "Build and utility scripts",
+    "supabase": "Database migrations and config",
+    ".devcontainer": "GitHub Codespaces / VS Code devcontainer"
+  },
+  "security": {
+    "secrets_management": "Vercel dashboard environment variables",
+    "api_security": "Basic Next.js API routing; middleware rate limiting and CSP headers planned",
+    "blockchain_security": "Private keys never in source code or vercel.json",
+    "admin_isolation": "Admin panels in separate repositories"
+  },
+  "ci_cd": {
+    "web_build": ".github/workflows/web-build.yml",
+    "web_deploy": ".github/workflows/web-deploy.yml",
+    "security_audit": ".github/workflows/security-audit.yml",
+    "ai_tests": ".github/workflows/ai-integration-test.yml",
+    "blockchain_tests": ".github/workflows/blockchain-test.yml"
+  },
+  "separated_repos": [
+    "SMSDAO/Agentic-Admin — Tauri desktop admin panel",
+    "SMSDAO/Agentic-Desktop — Electron desktop application",
+    "SMSDAO/Agentic-Mobile — React Native mobile app"
+  ]
+}
