@@ -3,10 +3,9 @@
 A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered agents, and complete blockchain integration for the Solana ecosystem.
 
 ![Agentic Banner](https://img.shields.io/badge/Solana-Web3-blueviolet?style=for-the-badge)
-![Node](https://img.shields.io/badge/Node-20%2B-green?style=for-the-badge)
+![Node](https://img.shields.io/badge/Node-20.19%2B-green?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge)
-![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen?style=for-the-badge)
 
 ## ✨ Features
 
@@ -63,7 +62,7 @@ A comprehensive full-stack Web3 platform featuring Neo Glow design, AI-powered a
 - Full admin UI dashboard
 - System tray integration
 - Auto-update support
-- Node 20+ compatible
+- Node 20.19+ compatible
 
 ### ⛓️ Blockchain Features
 
@@ -150,7 +149,7 @@ Agentic/
 │   ├── components/        # React components
 │   │   ├── ui/            # Button, Card, Input (Neo Glow)
 │   │   ├── layout/        # Navbar (responsive)
-│   │   └── ErrorBoundary  # React error boundary
+│   │   └── ErrorBoundary.tsx  # React error boundary
 │   ├── lib/               # Server/client libraries
 │   │   ├── solana/        # Solana client, DeFi, NFT
 │   │   ├── ai/            # LangChain, DALL-E
@@ -183,7 +182,7 @@ Agentic/
 
 ### Prerequisites
 
-- Node.js 20+ (required, supports 20–24)
+- Node.js 20.19+ or 22.12+ (required by Vite/Vitest)
 - npm 10+
 - Supabase account
 - Solana wallet

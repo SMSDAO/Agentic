@@ -54,7 +54,7 @@ describe('FallbackChain', () => {
 
   it('throws when no providers are added', async () => {
     const chain = new FallbackChain<string>();
-    await expect(chain.execute()).rejects.toThrow('FallbackChain has no providers');
+    await expect(chain.execute()).rejects.toThrow('FallbackChain has no providers. Add at least one with .add()');
   });
 
   it('supports chaining with .add()', async () => {

@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { RateLimiter, createRateLimiter } from '@/services/ai/rate-limiting';
 
 describe('RateLimiter', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('allows requests within the limit', () => {
     const limiter = new RateLimiter({ maxRequests: 3, windowMs: 60_000 });
     const result = limiter.check('user1');
@@ -26,30 +30,23 @@ describe('RateLimiter', () => {
   });
 
   it('resets after the window expires', () => {
-    const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1 });
+    vi.useFakeTimers();
+    const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1_000 });
     limiter.check('user1');
-    // Wait for window to expire
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        const result = limiter.check('user1');
-        expect(result.allowed).toBe(true);
-        resolve();
-      }, 10);
-    });
+    vi.advanceTimersByTime(1_001);
+    const result = limiter.check('user1');
+    expect(result.allowed).toBe(true);
   });
 
   it('purges expired entries', () => {
-    const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1 });
+    vi.useFakeTimers();
+    const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1_000 });
     limiter.check('user1');
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        limiter.purgeExpired();
-        // After purge, the key should be gone; new check should succeed
-        const result = limiter.check('user1');
-        expect(result.allowed).toBe(true);
-        resolve();
-      }, 10);
-    });
+    vi.advanceTimersByTime(1_001);
+    limiter.purgeExpired();
+    // After purge, the key should be gone; new check should succeed
+    const result = limiter.check('user1');
+    expect(result.allowed).toBe(true);
   });
 });
 

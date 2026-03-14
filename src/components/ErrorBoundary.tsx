@@ -23,7 +23,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo): void {
-    // Log error to monitoring service in production
+    // Errors are logged to the console in development only.
+    // To integrate a production monitoring service (e.g. Sentry),
+    // add the reporting call here before the NODE_ENV guard.
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
       console.error('ErrorBoundary caught:', error, info.componentStack);
