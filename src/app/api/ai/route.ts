@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSolanaAgent } from '@/lib/ai/langchain';
+import { AGENTIC_COPILOT_SYSTEM_PROMPT } from '@/lib/ai/agentic-copilot-system-prompt';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt } = await request.json();
+    const { prompt, copilot } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -21,7 +22,8 @@ export async function POST(request: NextRequest) {
     }
 
     const agent = createSolanaAgent(apiKey);
-    const response = await agent.execute(prompt);
+    const systemPrompt = copilot === true ? AGENTIC_COPILOT_SYSTEM_PROMPT : undefined;
+    const response = await agent.execute(prompt, systemPrompt);
 
     return NextResponse.json({ response });
   } catch (error) {
