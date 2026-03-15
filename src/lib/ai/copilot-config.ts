@@ -31,7 +31,7 @@ export enum CopilotCapability {
 
 /**
  * Structured shape that every Agentic Copilot response should follow.
- * All fields are optional so partial responses remain type-safe.
+ * `direct_answer` is mandatory; all other fields are optional.
  */
 export interface CopilotResponsePattern {
   /** Direct explanation of what the user asked. */
