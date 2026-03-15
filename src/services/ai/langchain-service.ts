@@ -8,6 +8,7 @@
 import 'server-only';
 import { ChatOpenAI } from '@langchain/openai';
 import { Tool } from '@langchain/core/tools';
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { createSolanaClient } from '@/lib/solana/client';
 
 // ---------------------------------------------------------------------------
@@ -79,8 +80,11 @@ export class SolanaAgent {
     });
   }
 
-  async execute(prompt: string): Promise<string> {
-    const response = await this.model.invoke(prompt);
+  async execute(prompt: string, systemPrompt?: string): Promise<string> {
+    const input = systemPrompt
+      ? [new SystemMessage(systemPrompt), new HumanMessage(prompt)]
+      : prompt;
+    const response = await this.model.invoke(input);
     return response.content as string;
   }
 
