@@ -40,44 +40,112 @@ ALTER TABLE public.admin_fee_config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_intent_mappings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_fee_audit_log ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies: only authenticated users with admin role
+-- RLS Policies: only users with admin or super_admin role in public.users
+-- Aligns with the pattern used in 002_admin_tauri_schema.sql.
+
 CREATE POLICY "admin_fee_config_select" ON public.admin_fee_config
   FOR SELECT TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_fee_config_insert" ON public.admin_fee_config
   FOR INSERT TO authenticated
-  WITH CHECK (auth.jwt() ->> 'role' = 'admin');
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_fee_config_update" ON public.admin_fee_config
   FOR UPDATE TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin')
-  WITH CHECK (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_intent_mappings_select" ON public.admin_intent_mappings
   FOR SELECT TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_intent_mappings_insert" ON public.admin_intent_mappings
   FOR INSERT TO authenticated
-  WITH CHECK (auth.jwt() ->> 'role' = 'admin');
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_intent_mappings_update" ON public.admin_intent_mappings
   FOR UPDATE TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin')
-  WITH CHECK (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_intent_mappings_delete" ON public.admin_intent_mappings
   FOR DELETE TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_fee_audit_log_select" ON public.admin_fee_audit_log
   FOR SELECT TO authenticated
-  USING (auth.jwt() ->> 'role' = 'admin');
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 CREATE POLICY "admin_fee_audit_log_insert" ON public.admin_fee_audit_log
   FOR INSERT TO authenticated
-  WITH CHECK (auth.jwt() ->> 'role' = 'admin');
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+        AND users.role IN ('admin', 'super_admin')
+    )
+  );
 
 -- Seed default fee config
 INSERT INTO public.admin_fee_config (fee_type, amount_sol, reserve_address, auto_forward)

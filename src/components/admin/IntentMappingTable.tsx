@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -97,13 +97,9 @@ export function IntentMappingTable({
     setBusy(true);
     try {
       await onCreate(newRow);
-      // Optimistically add; the parent will refresh on mount
-      setMappings((prev) => [
-        ...prev,
-        { ...newRow, id: `tmp-${Date.now()}` },
-      ]);
       setNewRow(EMPTY_ROW);
       setAdding(false);
+      // Parent's loadData() will refresh the mappings list
     } finally {
       setBusy(false);
     }

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdmin } from '@/lib/supabase/client';
+import { requireAdminRole } from '@/lib/supabase/admin-auth';
 
 export async function GET() {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const supabase = createSupabaseAdmin();
     const { data, error } = await supabase
@@ -22,6 +26,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { intentKeywords, route, featureName, description, isActive, priority, updatedBy } = body;
@@ -33,9 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!Array.isArray(intentKeywords) || intentKeywords.length === 0) {
+    if (
+      !Array.isArray(intentKeywords) ||
+      intentKeywords.length === 0 ||
+      intentKeywords.some((kw: unknown) => typeof kw !== 'string' || kw.trim() === '')
+    ) {
       return NextResponse.json(
-        { error: 'intentKeywords must be a non-empty array' },
+        { error: 'intentKeywords must be a non-empty array of non-empty strings' },
         { status: 400 },
       );
     }
@@ -44,7 +55,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from('admin_intent_mappings')
       .insert({
-        intent_keywords: intentKeywords,
+        intent_keywords: (intentKeywords as string[]).map((kw: string) => kw.trim()),
         route,
         feature_name: featureName,
         description: description ?? null,
@@ -69,6 +80,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { id, intentKeywords, route, featureName, description, isActive, priority, updatedBy } = body;
@@ -77,10 +91,35 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'id is required' }, { status: 400 });
     }
 
+    if (intentKeywords !== undefined) {
+      if (
+        !Array.isArray(intentKeywords) ||
+        intentKeywords.length === 0 ||
+        intentKeywords.some((kw: unknown) => typeof kw !== 'string' || kw.trim() === '')
+      ) {
+        return NextResponse.json(
+          { error: 'intentKeywords must be a non-empty array of non-empty strings' },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (route !== undefined && (typeof route !== 'string' || route.trim() === '')) {
+      return NextResponse.json({ error: 'route must be a non-empty string' }, { status: 400 });
+    }
+
+    if (featureName !== undefined && (typeof featureName !== 'string' || featureName.trim() === '')) {
+      return NextResponse.json(
+        { error: 'featureName must be a non-empty string' },
+        { status: 400 },
+      );
+    }
+
     const updatePayload: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     };
-    if (intentKeywords !== undefined) updatePayload.intent_keywords = intentKeywords;
+    if (intentKeywords !== undefined)
+      updatePayload.intent_keywords = (intentKeywords as string[]).map((kw: string) => kw.trim());
     if (route !== undefined) updatePayload.route = route;
     if (featureName !== undefined) updatePayload.feature_name = featureName;
     if (description !== undefined) updatePayload.description = description;
@@ -109,6 +148,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

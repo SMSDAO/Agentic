@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { FeeSchedulePanel, FeeRow } from '@/components/admin/FeeSchedulePanel';
 import { IntentMappingTable, IntentRow } from '@/components/admin/IntentMappingTable';

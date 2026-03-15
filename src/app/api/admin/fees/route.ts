@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdmin } from '@/lib/supabase/client';
+import { requireAdminRole } from '@/lib/supabase/admin-auth';
 
 export async function GET() {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const supabase = createSupabaseAdmin();
     const { data, error } = await supabase
@@ -22,6 +26,9 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  const authError = await requireAdminRole();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { feeType, amountSol, reserveAddress, autoForward, isActive, updatedBy } = body;
@@ -42,7 +49,7 @@ export async function PUT(request: NextRequest) {
 
     const supabase = createSupabaseAdmin();
 
-    // Fetch current value for audit log
+    // Fetch current amount_sol for audit log old_value
     const { data: current } = await supabase
       .from('admin_fee_config')
       .select('amount_sol')
@@ -69,13 +76,19 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Write audit log entry
-    await supabase.from('admin_fee_audit_log').insert({
+    // Write audit log entry; fail the request if the audit write fails
+    const { error: auditError } = await supabase.from('admin_fee_audit_log').insert({
       fee_type: feeType,
       old_value: current?.amount_sol ?? null,
       new_value: amountSol,
       changed_by: updatedBy ?? null,
     });
+
+    if (auditError) {
+      // eslint-disable-next-line no-console
+      console.error('Audit log insert failed:', auditError);
+      return NextResponse.json({ error: 'Audit log write failed' }, { status: 500 });
+    }
 
     return NextResponse.json({ fee: data });
   } catch (err) {
