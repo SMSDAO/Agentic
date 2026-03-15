@@ -11,7 +11,8 @@ import {
   BarChart3, 
   Bot,
   Menu,
-  X 
+  X,
+  ShieldCheck,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ const navigation = [
   { name: 'DeFi', href: '/defi', icon: TrendingUp },
   { name: 'Market', href: '/market', icon: BarChart3 },
   { name: 'AI Agent', href: '/ai-agent', icon: Bot },
+  { name: 'Admin', href: '/admin', icon: ShieldCheck },
 ];
 
 export function Navbar() {
