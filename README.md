@@ -389,38 +389,237 @@ import { Card } from '@/components/ui/Card';
 
 ## 📸 Screenshots
 
-### Public Web Frontend
+> Screenshots are captured after local deployment. Run `npm run dev` (web) or `cd admin-tauri && npm run tauri:dev` (admin) and save images to `docs/screenshots/` using the filenames referenced below.
 
-> **Coming Soon**: Screenshots of the landing page, dashboard, token operations, NFT management, DeFi integrations, and market data views will be added here once deployed.
+---
 
-The public web frontend features:
-- Landing page with Neo Glow design
-- User dashboard with portfolio overview
-- Token operations (transfer, stake, airdrop)
-- NFT creation and management
-- DeFi integrations (Jupiter, Raydium, etc.)
-- Market data and charts
-- AI agent interface
+### 🌐 User Dashboards (`src/app/`)
 
-### Admin Panel (Tauri Desktop)
+#### Main Dashboard (`/dashboard`)
 
-> **Coming Soon**: Screenshots of the admin panel will be added after initial deployment.
+![Dashboard overview](docs/screenshots/dashboard-overview.png)
 
-The admin panel provides:
-- Agent management screen with create/pause/resume controls
-- User management with credits and plan adjustments
-- Billing overview with subscription plans
-- Fee configuration interface
-- Infrastructure management (RPC, oracles, wallets)
-- Add-ons marketplace
-- SDK/API key management
-- Audit log viewer
-- Platform settings
+The main dashboard gives users a full portfolio overview in a 4-column stat grid and two detail cards:
 
-To generate screenshots:
-1. Run the web app: `npm run dev` → Open http://localhost:3000
-2. Run the admin panel: `cd admin-tauri && npm run tauri:dev`
-3. Take screenshots and add them to the repository
+| Widget | Content |
+|---|---|
+| **Total Balance** | USD portfolio value with 24 h change percentage (neon-blue) |
+| **Active Positions** | Open DeFi positions count with delta (neon-purple) |
+| **NFT Holdings** | Total NFTs held with recent additions (neon-pink) |
+| **Recent Transactions** | On-chain tx count with 24 h delta (neon-green) |
+| **Recent Transactions card** | Last 3 transfers with timestamp and amount |
+| **Portfolio Distribution card** | SOL / USDC / Other bar chart with percentages |
+
+---
+
+#### Token Operations (`/tokens`)
+
+![Token operations](docs/screenshots/tokens-overview.png)
+
+SPL token management interface with a **Transfer** and **Deploy Token** action bar at the top.
+
+| Section | Details |
+|---|---|
+| **Token list** | One card per token: name, symbol, balance, USD value, 24 h change badge |
+| **Token Deployment** | Deploy new SPL tokens via Metaplex — "Deploy Now" CTA |
+| **Transfer Assets** | Send tokens to any Solana address — "Transfer" CTA |
+| **Airdrop (ZK)** | ZK-compressed airdrops via Light Protocol — "Airdrop" CTA |
+
+---
+
+#### NFT Management (`/nfts`)
+
+![NFT management](docs/screenshots/nfts-overview.png)
+
+4-column NFT gallery with **Upload** and **Create Collection** actions.
+
+| Section | Details |
+|---|---|
+| **NFT grid** | 4-column card grid; each card shows artwork, name, floor price, and a View action |
+| **Metaplex Integration** | Collection deployment, minting, metadata management, royalty config |
+| **3.Land Marketplace** | Automatic listing, SPL-token pricing, instant settlement |
+
+---
+
+#### DeFi Operations (`/defi`)
+
+![DeFi operations](docs/screenshots/defi-overview.png)
+
+4-button quick-action bar (Swap / Liquidity / Stake / Farm) above a protocol card grid.
+
+| Protocol | Description |
+|---|---|
+| Jupiter | Best-price token swaps with route optimisation |
+| Raydium | CPMM / CLMM AMM pools |
+| Orca | Concentrated liquidity Whirlpools |
+| Meteora | Dynamic liquidity (DLMM) |
+| Kamino | Lending and borrowing |
+| Drift | Perpetual futures and vaults |
+| deBridge DLN | Cross-chain asset bridging |
+| Jito Bundles | MEV-protected transaction bundles |
+
+---
+
+#### Market Data (`/market`)
+
+![Market data](docs/screenshots/market-overview.png)
+
+Real-time market overview with a 3-card header and a sortable token table.
+
+| Section | Details |
+|---|---|
+| **Market Cap card** | Global crypto market cap + 24 h change |
+| **24 h Volume card** | Global trading volume |
+| **BTC Dominance card** | BTC dominance percentage |
+| **Trending on Solana** | Table: rank, name/symbol, price, 24 h %, volume, market cap |
+| **CoinGecko Pro API** | Data source panel: prices, trends, gainers/losers, historical |
+| **Pyth Network** | On-chain oracle feeds: real-time, low-latency, multi-asset |
+
+---
+
+#### AI Agent (`/ai-agent`)
+
+![AI agent interface](docs/screenshots/ai-agent-overview.png)
+
+Split-panel layout: chat window (2/3 width) + capabilities sidebar (1/3 width).
+
+| Panel | Details |
+|---|---|
+| **Chat window** | Scrollable message history; text input + Send button |
+| **Capabilities** | Checklist: balance check, token transfer, Jupiter swap, NFT mint, artwork gen, market analysis, DeFi ops |
+| **Quick Actions** | One-click prompts: "Check my balance", "Show trending tokens", "Generate NFT artwork", "Latest market prices" |
+| **LangChain** | Agent backend: memory management, tool orchestration, streaming |
+| **Vercel AI SDK** | Multi-provider AI integration with type-safe streaming |
+
+---
+
+### 🛠️ Admin Panel (`admin-tauri/`)
+
+The admin panel is a **Tauri desktop application** (separate from the web app). It connects directly to Supabase using the service role key and provides privileged management screens.
+
+```
+cd admin-tauri
+cp .env.example .env   # add SUPABASE_SERVICE_ROLE_KEY
+npm install
+npm run tauri:dev
+```
+
+#### Agents Screen
+
+![Admin – Agents](docs/screenshots/admin-agents.png)
+
+| Column | Description |
+|---|---|
+| Name | Agent display name |
+| Status | `active` / `paused` badge |
+| Actions | ▶ Resume · ⏸ Pause · 🗑 Delete |
+
+---
+
+#### Users Screen (`admin/users/`)
+
+![Admin – Users](docs/screenshots/admin-users.png)
+
+Full user registry with inline status and plan badges.
+
+| Column | Description |
+|---|---|
+| Email | User email address |
+| Wallet | Truncated Solana address (`ABC12345…`) |
+| Plan | `free` / `pro` / `enterprise` badge |
+| Credits | Numeric balance |
+| Status | `active` · `suspended` · `frozen` badge |
+| Role | `user` / `admin` badge |
+
+---
+
+#### Billing Screen
+
+![Admin – Billing](docs/screenshots/admin-billing.png)
+
+Subscription plan management displayed as a 3-column card grid (Free / Pro / Enterprise), each showing price, feature list, and an edit action.
+
+---
+
+#### Fees Screen
+
+![Admin – Fees](docs/screenshots/admin-fees.png)
+
+Platform fee configuration: transaction fee percentage, referral fee, platform cut — editable inline.
+
+---
+
+#### Infrastructure Screens
+
+![Admin – RPC / Oracles / Wallets](docs/screenshots/admin-infrastructure.png)
+
+| Screen | Description |
+|---|---|
+| **RPC** | Add/remove Solana RPC endpoints with health indicators |
+| **Oracles** | Oracle feed configuration (Pyth, Switchboard) |
+| **Wallets** | Platform wallet management and treasury balances |
+
+---
+
+#### Dev / SDK & API Screen (`admin/dev/`)
+
+![Admin – SDK & API](docs/screenshots/admin-sdk.png)
+
+Developer portal for managing SDK configurations and API key access.
+
+| Column | Description |
+|---|---|
+| SDK Name | Integration identifier |
+| API Key | Masked key with copy action |
+| Status | `active` / `revoked` badge |
+| Permissions | Scopes granted to the key |
+
+REST API endpoints exposed by the web app:
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/ai` | AI agent chat (LangChain / Vercel AI SDK) |
+| `GET` | `/api/balance` | On-chain wallet balance via Solana RPC |
+| `GET` | `/api/market` | Token prices and market data (CoinGecko) |
+
+---
+
+#### Add-ons Marketplace
+
+![Admin – Add-ons](docs/screenshots/admin-addons.png)
+
+Marketplace for enabling optional platform extensions (e.g., extra AI providers, additional oracle feeds, white-label branding).
+
+---
+
+#### Audit Logs Screen
+
+![Admin – Audit Logs](docs/screenshots/admin-logs.png)
+
+Chronological log table of all privileged operations.
+
+| Column | Description |
+|---|---|
+| Timestamp | UTC date/time of the action |
+| Actor | Admin email who performed the action |
+| Action | `create_agent`, `suspend_user`, `update_fee`, etc. |
+| Resource | Affected entity ID |
+
+---
+
+#### Settings Screen
+
+![Admin – Settings](docs/screenshots/admin-settings.png)
+
+Global platform configuration: display name, contact email, maintenance mode toggle, feature flags.
+
+---
+
+### Generating Screenshots
+
+1. **Web app** — `npm run dev` → navigate to each route → screenshot → save to `docs/screenshots/`
+2. **Admin panel** — `cd admin-tauri && npm run tauri:dev` → navigate each screen → screenshot → save to `docs/screenshots/`
+3. Commit the image files and the placeholder `![…](docs/screenshots/…)` links above will resolve automatically.
 
 ## 🔐 Security
 
