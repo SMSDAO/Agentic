@@ -23,7 +23,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        node-version: ['20', '22']
+        node-version: ['20.19', '22']
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node ${{ matrix.node-version }}
@@ -37,6 +37,8 @@ jobs:
         run: npm run type-check
       - name: Lint
         run: npm run lint -- --max-warnings=0
+      - name: Unit tests
+        run: npm test
       - name: Build
         run: npm run build
         env:
