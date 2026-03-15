@@ -28,7 +28,7 @@ It **never** executes transactions, holds keys, or accesses live on-chain data d
 | `nft_list` | Explain 3.Land marketplace listing flow on `/nfts`. |
 | `market_analysis` | Describe trending tokens, market cap, and volume data on `/market`. |
 | `defi_operations` | High-level guidance for Jupiter, Raydium, Orca, Meteora, Kamino, Drift, deBridge, and Jito on `/defi`. |
-| `portfolio_summary` | Summarise portfolio overview, recent transactions, and distribution on `/dashboard`. |
+| `portfolio_summary` | Summarize portfolio overview, recent transactions, and distribution on `/dashboard`. |
 
 ---
 
@@ -130,8 +130,11 @@ import {
 
 The `/api/ai` route activates copilot mode when the request body contains `"copilot": true`:
 
-```json
+```http
 POST /api/ai
+```
+
+```json
 {
   "prompt": "How do I swap SOL to USDC?",
   "copilot": true
