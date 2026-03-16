@@ -59,7 +59,9 @@
   },
   "overrides": {
     "form-data": ">=4.0.4",
-    "aptos": ">=1.22.0"
+    "aptos": ">=1.22.0",
+    "elliptic": "6.6.1",
+    "crypto-js": "4.2.0"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
