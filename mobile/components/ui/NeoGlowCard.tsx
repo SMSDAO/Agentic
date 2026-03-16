@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 interface NeoGlowCardProps {
   children: React.ReactNode;
   glowColor?: string;
-  style?: ViewStyle;
+  shadowColor?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -14,6 +15,7 @@ interface NeoGlowCardProps {
 export function NeoGlowCard({
   children,
   glowColor = '#00d4ff',
+  shadowColor,
   style,
 }: NeoGlowCardProps) {
   return (
@@ -22,7 +24,7 @@ export function NeoGlowCard({
         styles.card,
         {
           borderColor: glowColor,
-          shadowColor: glowColor,
+          shadowColor: shadowColor ?? glowColor,
         },
         style,
       ]}
