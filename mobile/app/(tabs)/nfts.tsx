@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { Text, ScrollView, StyleSheet } from 'react-native';
 import { NeoGlowCard } from '../../components/ui/NeoGlowCard';
 
 export default function NFTsScreen() {
