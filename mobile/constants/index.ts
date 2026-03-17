@@ -1,7 +1,7 @@
 /** Solana network used by the mobile app. */
 export const SOLANA_NETWORK = 'mainnet-beta' as const;
 
-/** Public RPC fallback (override with env / EAS secrets). */
+/** Public RPC fallback (override with EXPO_PUBLIC_SOLANA_RPC_URL — this value is inlined into the client bundle, not a secret). */
 export const SOLANA_RPC_URL =
   process.env.EXPO_PUBLIC_SOLANA_RPC_URL ?? 'https://api.mainnet-beta.solana.com';
 
