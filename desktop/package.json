@@ -2,7 +2,7 @@
   "name": "agentic-desktop",
   "version": "0.1.0",
   "description": "Agentic Desktop Admin Application",
-  "main": "dist/main.js",
+  "main": "src/main.js",
   "scripts": {
     "dev": "electron-forge start",
     "build": "tsc",
@@ -31,6 +31,6 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

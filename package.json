@@ -11,6 +11,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "mobile": "npm --prefix mobile run start",
+    "mobile:android": "npm --prefix mobile run android",
+    "mobile:ios": "npm --prefix mobile run ios",
+    "desktop": "npm --prefix desktop run dev",
+    "desktop:build": "npm --prefix desktop run make",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status"
