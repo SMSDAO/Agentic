@@ -8,6 +8,7 @@ export interface TaskRecord {
   taskType: string;
   payload: Record<string, unknown>;
   status: TaskStatus;
+  /** Number of handler executions started for this task. */
   attempts: number;
   maxAttempts: number;
   error?: string;
