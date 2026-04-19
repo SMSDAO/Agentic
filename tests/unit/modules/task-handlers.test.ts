@@ -1,28 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { InMemoryTaskQueue } from '@/modules/runtime/task-queue';
 import { registerDefaultTaskHandlers } from '@/modules/runtime/task-handlers';
+import { waitForFinalStatus } from '../helpers/wait-for-final-status';
 
 const executeMock = vi.fn();
-const MAX_POLL_ATTEMPTS = 30;
-const POLL_INTERVAL_MS = 25;
 
 vi.mock('@/lib/ai/langchain', () => ({
   createSolanaAgent: vi.fn(() => ({
     execute: executeMock,
   })),
 }));
-
-async function waitForTerminalStatus(queue: InMemoryTaskQueue, taskId: string): Promise<void> {
-  for (let i = 0; i < MAX_POLL_ATTEMPTS; i += 1) {
-    const task = queue.get(taskId);
-    if (task?.status === 'completed' || task?.status === 'failed') {
-      return;
-    }
-    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
-  }
-
-  throw new Error('task did not reach terminal status');
-}
 
 describe('task handlers', () => {
   afterEach(() => {
@@ -35,7 +22,7 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({ taskType: 'execute_agent_prompt', payload: {}, maxAttempts: 1 });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('failed');
@@ -51,7 +38,7 @@ describe('task handlers', () => {
       payload: { prompt: 'hello' },
       maxAttempts: 1,
     });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('failed');
@@ -70,7 +57,7 @@ describe('task handlers', () => {
       payload: { prompt: 'hello' },
       maxAttempts: 1,
     });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('completed');
@@ -86,7 +73,7 @@ describe('task handlers', () => {
       payload: { channel: 'push', recipient: 'x', message: 'hi' },
       maxAttempts: 1,
     });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('failed');
@@ -102,7 +89,7 @@ describe('task handlers', () => {
       payload: { channel: 'sms', recipient: '', message: '' },
       maxAttempts: 1,
     });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('failed');
@@ -118,7 +105,7 @@ describe('task handlers', () => {
       payload: { channel: 'email', recipient: 'user@example.com', message: 'done' },
       maxAttempts: 1,
     });
-    await waitForTerminalStatus(queue, task.id);
+    await waitForFinalStatus(queue, task.id);
 
     const result = queue.get(task.id);
     expect(result?.status).toBe('completed');

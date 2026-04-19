@@ -14,9 +14,22 @@ const DEFAULT_CONSUMER: ApiConsumer = {
   apiKey: 'dev-local-key',
 };
 
+function parsePositiveNumberEnv(name: string, fallback: number): number {
+  const parsed = Number(process.env[name] ?? fallback);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    logger.warn('Invalid numeric env value; falling back to default', {
+      name,
+      fallback,
+    });
+    return fallback;
+  }
+
+  return parsed;
+}
+
 const consumerRateLimiter = createRateLimiter({
-  maxRequests: Number(process.env.SAAS_RATE_LIMIT_MAX ?? 60),
-  windowMs: Number(process.env.SAAS_RATE_LIMIT_WINDOW_MS ?? 60_000),
+  maxRequests: parsePositiveNumberEnv('SAAS_RATE_LIMIT_MAX', 60),
+  windowMs: parsePositiveNumberEnv('SAAS_RATE_LIMIT_WINDOW_MS', 60_000),
 });
 
 /**
