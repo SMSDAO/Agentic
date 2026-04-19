@@ -2,104 +2,123 @@
 
 ## Authentication
 
-All API routes are server-side Next.js Route Handlers. Authentication is handled via Supabase Auth headers where required.
+All SaaS endpoints require API key authentication:
 
-## Endpoints
+- `x-api-key: <key>`
+- `Authorization: Bearer <key>`
 
-### POST /api/ai
+Keys are configured via `SAAS_API_KEYS` (`id:key:plan,id:key:plan`).
 
-Execute a Solana AI agent query via LangChain + OpenAI.
+## Monetization Headers
 
-**Request Body**
+Every authenticated success/error response (except auth failures before a consumer is identified) includes:
 
-```json
-{
-  "prompt": "What is the SOL balance of <address>?"
-}
-```
+- `x-usage-count`: consumer usage count in current runtime
 
-**Response (200)**
-
-```json
-{
-  "response": "The SOL balance of <address> is 4.2 SOL."
-}
-```
-
-**Error Responses**
-
-| Status | Condition |
-|--------|-----------|
-| 400 | Missing `prompt` field |
-| 500 | OpenAI API key not configured |
-| 500 | Agent execution failed |
+Rate limits return `429` when exceeded.
 
 ---
 
-### GET /api/balance?address=\<address\>
+## Agents API
 
-Fetch the SOL balance for a Solana wallet address.
+### GET `/api/agents`
+List agents owned by the authenticated consumer.
 
-**Query Parameters**
+### POST `/api/agents`
+Create an agent.
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `address` | Yes | Base58-encoded Solana public key |
-
-**Response (200)**
+Request body:
 
 ```json
 {
-  "address": "8xrt...",
-  "balance": 4.2,
-  "unit": "SOL"
+  "name": "market-bot",
+  "description": "Monitors market conditions",
+  "config": { "mode": "analysis" }
 }
 ```
 
+### GET `/api/agents/{agentId}`
+Fetch one owned agent.
+
+### PATCH `/api/agents/{agentId}`
+Update one owned agent.
+
+### DELETE `/api/agents/{agentId}`
+Delete one owned agent.
+
 ---
 
-### GET /api/market
+## Tasks API
 
-Fetch current cryptocurrency market data from CoinGecko.
+### POST `/api/tasks`
+Enqueue a task for async execution.
 
-**Query Parameters**
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `endpoint` | `trending` | One of `trending`, `gainers`, or `price` |
-| `tokenId` | — | Required when `endpoint=price`; CoinGecko token ID |
-
-**Response (200) — endpoint=trending**
-
-Returns the raw CoinGecko `coins` array from the `/search/trending` endpoint:
+Request body:
 
 ```json
-[
-  {
-    "item": {
-      "id": "solana",
-      "symbol": "sol",
-      "name": "Solana",
-      "...": "..."
-    }
-  }
-]
+{
+  "taskType": "execute_agent_prompt",
+  "payload": { "prompt": "Give me SOL market summary" },
+  "maxAttempts": 3
+}
 ```
 
-**Response (200) — endpoint=gainers**
+Supported `taskType` values:
 
-Returns the raw CoinGecko `coins/markets` array (top gainers by 24 h price change).
+- `execute_agent_prompt`
+- `send_message`
+
+Response: `202 Accepted`
+
+```json
+{
+  "taskId": "<uuid>",
+  "status": "queued"
+}
+```
+
+### GET `/api/tasks`
+List tasks for the authenticated consumer, or use query parameter:
+
+- `/api/tasks?taskId=<uuid>`
+
+### GET `/api/tasks/{taskId}`
+Fetch a single task status.
+
+Task lifecycle:
+
+- `queued`
+- `processing`
+- `retrying`
+- `completed`
+- `failed`
+
+---
+
+## Messages API
+
+### POST `/api/messages`
+Queue outbound email/SMS message hooks.
+
+Request body:
+
+```json
+{
+  "channel": "sms",
+  "recipient": "+15555555555",
+  "message": "Your task completed",
+  "metadata": { "tenant": "acme" }
+}
+```
+
+Response: `202 Accepted` with queued `taskId`.
+
+---
 
 ## Error Format
 
-All error responses follow this format:
-
 ```json
 {
-  "error": "Human-readable error message"
+  "error": "Human-readable message"
 }
 ```
-
-## Rate Limiting
-
-Rate limiting is not currently enforced at the middleware level. `src/services/ai/rate-limiting.ts` provides a per-IP rate-limiting utility for use within individual API route handlers.
