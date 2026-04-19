@@ -1,7 +1,7 @@
 import { createSolanaAgent } from '@/lib/ai/langchain';
+import { MESSAGE_CHANNELS } from '@/modules/api/constants';
 import type { InMemoryTaskQueue } from '@/modules/runtime/task-queue';
-
-const MESSAGE_CHANNELS = new Set(['email', 'sms']);
+const MESSAGE_CHANNEL_SET = new Set(MESSAGE_CHANNELS);
 
 async function executeAgentPrompt(payload: Record<string, unknown>): Promise<unknown> {
   const prompt = typeof payload.prompt === 'string' ? payload.prompt : '';
@@ -24,7 +24,7 @@ async function sendMessage(payload: Record<string, unknown>): Promise<unknown> {
   const recipient = typeof payload.recipient === 'string' ? payload.recipient : '';
   const message = typeof payload.message === 'string' ? payload.message : '';
 
-  if (!MESSAGE_CHANNELS.has(channel)) {
+  if (!MESSAGE_CHANNEL_SET.has(channel as (typeof MESSAGE_CHANNELS)[number])) {
     throw new Error('Unsupported channel');
   }
 

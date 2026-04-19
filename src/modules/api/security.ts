@@ -54,8 +54,12 @@ function getApiKeyFromRequest(request: NextRequest): string {
     return '';
   }
 
-  const [, token] = auth.split(' ');
-  return token ?? '';
+  const parts = auth.split(' ');
+  if (parts.length < 2) {
+    return '';
+  }
+
+  return parts[1] ?? '';
 }
 
 export function authenticateApiKey(request: NextRequest): ApiConsumer | null {

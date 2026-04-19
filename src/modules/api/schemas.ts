@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MESSAGE_CHANNELS } from '@/modules/api/constants';
 
 export const createAgentSchema = z.object({
   name: z.string().min(1),
@@ -20,7 +21,7 @@ export const executeTaskSchema = z.object({
 });
 
 export const messageHookSchema = z.object({
-  channel: z.enum(['email', 'sms']),
+  channel: z.enum(MESSAGE_CHANNELS),
   recipient: z.string().min(1),
   message: z.string().min(1),
   metadata: z.record(z.unknown()).optional(),
