@@ -1,6 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { InMemoryTaskQueue } from '@/modules/runtime/task-queue';
 
+async function waitForTerminalStatus(queue: InMemoryTaskQueue, taskId: string): Promise<void> {
+  for (let i = 0; i < 30; i += 1) {
+    const task = queue.get(taskId);
+    if (task?.status === 'completed' || task?.status === 'failed') {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+
+  throw new Error('task did not reach terminal status');
+}
+
 describe('InMemoryTaskQueue', () => {
   afterEach(() => {
     vi.useRealTimers();
@@ -11,7 +23,7 @@ describe('InMemoryTaskQueue', () => {
     queue.registerHandler('echo', async (payload) => payload);
 
     const task = queue.enqueue({ taskType: 'echo', payload: { ok: true } });
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await waitForTerminalStatus(queue, task.id);
 
     const record = queue.get(task.id);
     expect(record?.status).toBe('completed');

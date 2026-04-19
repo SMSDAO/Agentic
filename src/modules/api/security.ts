@@ -18,6 +18,10 @@ const consumerRateLimiter = createRateLimiter({
   windowMs: Number(process.env.SAAS_RATE_LIMIT_WINDOW_MS ?? 60_000),
 });
 
+/**
+ * In-memory usage storage resets on deploy/restart.
+ * Replace with Redis/Postgres-backed usage metering for billing-grade durability.
+ */
 const usageStore = new Map<string, number>();
 
 function parseConsumersFromEnv(): ApiConsumer[] {

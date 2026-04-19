@@ -23,7 +23,7 @@ interface EnqueueInput {
   maxAttempts?: number;
 }
 
-const RETRY_DELAY_MS = 500;
+const RETRY_DELAY_MS = Number(process.env.TASK_RETRY_DELAY_MS ?? 500);
 
 export class InMemoryTaskQueue {
   private tasks = new Map<string, TaskRecord>();

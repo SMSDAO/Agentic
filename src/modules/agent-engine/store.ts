@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { AgentRecord, CreateAgentInput, UpdateAgentInput } from '@/modules/agent-engine/types';
 
+/** Shared process-level agent registry for the singleton API runtime. */
 const agents = new Map<string, AgentRecord>();
 
 export class AgentEngineStore {

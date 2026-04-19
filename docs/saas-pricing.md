@@ -8,6 +8,8 @@
 - 60 requests/minute
 - Community support
 
+> Current implementation enforces API key auth and request rate limits, while tier-specific monthly quotas/key-count caps are the next billing-control step.
+
 ### Pro — $99/month
 - 20 API keys
 - 500,000 API requests/month
