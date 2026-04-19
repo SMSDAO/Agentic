@@ -15,9 +15,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 
   const { agentId } = await context.params;
-  const agent = agentEngineStore.get(agentId);
+  const agent = agentEngineStore.getByConsumer(agentId, access.consumerId);
   if (!agent) {
-    return jsonError('Agent not found', 404);
+    return jsonError('Agent not found', 404, { headers: access.headers });
   }
 
   return NextResponse.json({ agent }, { headers: access.headers });
@@ -32,12 +32,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   const { agentId } = await context.params;
   const parsed = updateAgentSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return jsonError('Invalid update payload', 400);
+    return jsonError('Invalid update payload', 400, { headers: access.headers });
   }
 
-  const agent = agentEngineStore.update(agentId, parsed.data);
+  const agent = agentEngineStore.updateByConsumer(agentId, access.consumerId, parsed.data);
   if (!agent) {
-    return jsonError('Agent not found', 404);
+    return jsonError('Agent not found', 404, { headers: access.headers });
   }
 
   return NextResponse.json({ agent }, { headers: access.headers });
@@ -50,9 +50,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
   }
 
   const { agentId } = await context.params;
-  const deleted = agentEngineStore.delete(agentId);
+  const deleted = agentEngineStore.deleteByConsumer(agentId, access.consumerId);
   if (!deleted) {
-    return jsonError('Agent not found', 404);
+    return jsonError('Agent not found', 404, { headers: access.headers });
   }
 
   return NextResponse.json({ deleted: true }, { headers: access.headers });

@@ -3,7 +3,7 @@ import { jsonError } from '@/modules/api/http';
 import { authenticateApiKey, enforceRateLimit, recordUsage } from '@/modules/api/security';
 
 export function withApiAccess(request: NextRequest):
-  | { headers: Record<string, string> }
+  | { consumerId: string; consumerPlan: 'free' | 'pro' | 'enterprise'; headers: Record<string, string> }
   | { error: ReturnType<typeof jsonError> } {
   const consumer = authenticateApiKey(request);
   if (!consumer) {
@@ -16,5 +16,9 @@ export function withApiAccess(request: NextRequest):
   }
 
   const usage = recordUsage(consumer.id);
-  return { headers: { 'x-usage-count': String(usage) } };
+  return {
+    consumerId: consumer.id,
+    consumerPlan: consumer.plan,
+    headers: { 'x-usage-count': String(usage) },
+  };
 }

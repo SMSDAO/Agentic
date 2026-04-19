@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { createRateLimiter } from '@/services/ai/rate-limiting';
 import { logger } from '@/modules/safety/logger';
+import { maskSecret } from '@/modules/safety/secrets';
 
 export interface ApiConsumer {
   id: string;
@@ -41,6 +42,11 @@ const usageStore = new Map<string, number>();
 function parseConsumersFromEnv(): ApiConsumer[] {
   const raw = process.env.SAAS_API_KEYS;
   if (!raw) {
+    if (process.env.NODE_ENV === 'production') {
+      logger.error('SAAS_API_KEYS is required in production');
+      return [];
+    }
+
     return [DEFAULT_CONSUMER];
   }
 
@@ -51,7 +57,12 @@ function parseConsumersFromEnv(): ApiConsumer[] {
     .map((entry) => {
       const parts = entry.split(':');
       if (parts.length !== 3) {
-        logger.warn('Skipping malformed SAAS_API_KEYS entry', { entry });
+        const [id = 'unknown', apiKey = '', plan = 'free'] = parts;
+        logger.warn('Skipping malformed SAAS_API_KEYS entry', {
+          id,
+          apiKey: apiKey ? maskSecret(apiKey) : '',
+          plan,
+        });
         return null;
       }
 
@@ -79,7 +90,7 @@ function getApiKeyFromRequest(request: NextRequest): string {
   }
 
   const parts = auth.split(' ');
-  if (parts.length < 2) {
+  if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
     return '';
   }
 

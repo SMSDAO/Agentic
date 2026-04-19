@@ -2,6 +2,7 @@ export type AgentStatus = 'active' | 'paused';
 
 export interface AgentRecord {
   id: string;
+  consumerId: string;
   name: string;
   description?: string;
   status: AgentStatus;
@@ -11,6 +12,7 @@ export interface AgentRecord {
 }
 
 export interface CreateAgentInput {
+  consumerId: string;
   name: string;
   description?: string;
   config?: Record<string, unknown>;

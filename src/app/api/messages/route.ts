@@ -12,10 +12,11 @@ export async function POST(request: NextRequest) {
 
   const parsed = messageHookSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return jsonError('Invalid message payload', 400);
+    return jsonError('Invalid message payload', 400, { headers: access.headers });
   }
 
   const task = getRuntimeQueue().enqueue({
+    consumerId: access.consumerId,
     taskType: 'send_message',
     payload: parsed.data,
     maxAttempts: 5,

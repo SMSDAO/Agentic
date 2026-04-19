@@ -4,27 +4,27 @@ import { AgentEngineStore } from '@/modules/agent-engine/store';
 describe('AgentEngineStore', () => {
   it('creates and retrieves agents', () => {
     const store = new AgentEngineStore();
-    const created = store.create({ name: 'alpha' });
+    const created = store.create({ consumerId: 'tenant-a', name: 'alpha' });
 
     expect(created.id).toBeTruthy();
-    expect(store.get(created.id)?.name).toBe('alpha');
+    expect(store.getByConsumer(created.id, 'tenant-a')?.name).toBe('alpha');
   });
 
   it('updates existing agent and returns null for missing', () => {
     const store = new AgentEngineStore();
-    const created = store.create({ name: 'beta' });
+    const created = store.create({ consumerId: 'tenant-a', name: 'beta' });
 
-    const updated = store.update(created.id, { status: 'paused' });
+    const updated = store.updateByConsumer(created.id, 'tenant-a', { status: 'paused' });
     expect(updated?.status).toBe('paused');
 
-    expect(store.update('missing', { status: 'active' })).toBeNull();
+    expect(store.updateByConsumer('missing', 'tenant-a', { status: 'active' })).toBeNull();
   });
 
   it('deletes agents', () => {
     const store = new AgentEngineStore();
-    const created = store.create({ name: 'gamma' });
+    const created = store.create({ consumerId: 'tenant-a', name: 'gamma' });
 
-    expect(store.delete(created.id)).toBe(true);
-    expect(store.get(created.id)).toBeNull();
+    expect(store.deleteByConsumer(created.id, 'tenant-a')).toBe(true);
+    expect(store.getByConsumer(created.id, 'tenant-a')).toBeNull();
   });
 });

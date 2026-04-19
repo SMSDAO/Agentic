@@ -14,10 +14,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 
   const { taskId } = await context.params;
-  const task = getRuntimeQueue().get(taskId);
+  const task = getRuntimeQueue().getByConsumer(taskId, access.consumerId);
 
   if (!task) {
-    return jsonError('Task not found', 404);
+    return jsonError('Task not found', 404, { headers: access.headers });
   }
 
   return NextResponse.json({ task }, { headers: access.headers });

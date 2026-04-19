@@ -5,18 +5,24 @@ import type { AgentRecord, CreateAgentInput, UpdateAgentInput } from '@/modules/
 const agents = new Map<string, AgentRecord>();
 
 export class AgentEngineStore {
-  list(): AgentRecord[] {
-    return Array.from(agents.values());
+  listByConsumer(consumerId: string): AgentRecord[] {
+    return Array.from(agents.values()).filter((agent) => agent.consumerId === consumerId);
   }
 
-  get(id: string): AgentRecord | null {
-    return agents.get(id) ?? null;
+  getByConsumer(id: string, consumerId: string): AgentRecord | null {
+    const agent = agents.get(id);
+    if (!agent || agent.consumerId !== consumerId) {
+      return null;
+    }
+
+    return agent;
   }
 
   create(input: CreateAgentInput): AgentRecord {
     const now = new Date().toISOString();
     const record: AgentRecord = {
       id: randomUUID(),
+      consumerId: input.consumerId,
       name: input.name,
       description: input.description,
       status: 'active',
@@ -29,8 +35,8 @@ export class AgentEngineStore {
     return record;
   }
 
-  update(id: string, input: UpdateAgentInput): AgentRecord | null {
-    const current = this.get(id);
+  updateByConsumer(id: string, consumerId: string, input: UpdateAgentInput): AgentRecord | null {
+    const current = this.getByConsumer(id, consumerId);
     if (!current) {
       return null;
     }
@@ -46,7 +52,12 @@ export class AgentEngineStore {
     return updated;
   }
 
-  delete(id: string): boolean {
+  deleteByConsumer(id: string, consumerId: string): boolean {
+    const agent = this.getByConsumer(id, consumerId);
+    if (!agent) {
+      return false;
+    }
+
     return agents.delete(id);
   }
 }

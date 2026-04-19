@@ -7,13 +7,4 @@ services:
       - '3000:3000'
     env_file:
       - .env.saas
-    depends_on:
-      - redis
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - '6379:6379'
-    command: ["redis-server", "--save", "", "--appendonly", "no"]
     restart: unless-stopped

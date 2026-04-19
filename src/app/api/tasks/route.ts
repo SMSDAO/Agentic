@@ -15,12 +15,22 @@ export async function GET(request: NextRequest) {
   const queue = getRuntimeQueue();
 
   if (!taskId) {
-    return NextResponse.json({ tasks: queue.list() }, { headers: access.headers });
+    const tasks = queue.listByConsumer(access.consumerId).map((task) => ({
+      id: task.id,
+      consumerId: task.consumerId,
+      taskType: task.taskType,
+      status: task.status,
+      attempts: task.attempts,
+      maxAttempts: task.maxAttempts,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+    }));
+    return NextResponse.json({ tasks }, { headers: access.headers });
   }
 
-  const task = queue.get(taskId);
+  const task = queue.getByConsumer(taskId, access.consumerId);
   if (!task) {
-    return jsonError('Task not found', 404);
+    return jsonError('Task not found', 404, { headers: access.headers });
   }
 
   return NextResponse.json({ task }, { headers: access.headers });
@@ -34,11 +44,11 @@ export async function POST(request: NextRequest) {
 
   const parsed = executeTaskSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return jsonError('Invalid task payload', 400);
+    return jsonError('Invalid task payload', 400, { headers: access.headers });
   }
 
   const queue = getRuntimeQueue();
-  const task = queue.enqueue(parsed.data);
+  const task = queue.enqueue({ ...parsed.data, consumerId: access.consumerId });
 
   return NextResponse.json(
     { taskId: task.id, status: task.status },

@@ -21,10 +21,15 @@ describe('task handlers', () => {
     const queue = new InMemoryTaskQueue();
     registerDefaultTaskHandlers(queue);
 
-    const task = queue.enqueue({ taskType: 'execute_agent_prompt', payload: {}, maxAttempts: 1 });
+    const task = queue.enqueue({
+      consumerId: 'tenant-a',
+      taskType: 'execute_agent_prompt',
+      payload: {},
+      maxAttempts: 1,
+    });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('failed');
     expect(result?.error).toContain('prompt is required');
   });
@@ -34,13 +39,14 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({
+      consumerId: 'tenant-a',
       taskType: 'execute_agent_prompt',
       payload: { prompt: 'hello' },
       maxAttempts: 1,
     });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('failed');
     expect(result?.error).toContain('OPENAI_API_KEY is not configured');
   });
@@ -53,13 +59,14 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({
+      consumerId: 'tenant-a',
       taskType: 'execute_agent_prompt',
       payload: { prompt: 'hello' },
       maxAttempts: 1,
     });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('completed');
     expect(result?.result).toEqual({ response: 'ok-response' });
   });
@@ -69,13 +76,14 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({
+      consumerId: 'tenant-a',
       taskType: 'send_message',
       payload: { channel: 'push', recipient: 'x', message: 'hi' },
       maxAttempts: 1,
     });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('failed');
     expect(result?.error).toContain('Unsupported channel');
   });
@@ -85,13 +93,14 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({
+      consumerId: 'tenant-a',
       taskType: 'send_message',
       payload: { channel: 'sms', recipient: '', message: '' },
       maxAttempts: 1,
     });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('failed');
     expect(result?.error).toContain('recipient and message are required');
   });
@@ -101,13 +110,14 @@ describe('task handlers', () => {
     registerDefaultTaskHandlers(queue);
 
     const task = queue.enqueue({
+      consumerId: 'tenant-a',
       taskType: 'send_message',
       payload: { channel: 'email', recipient: 'user@example.com', message: 'done' },
       maxAttempts: 1,
     });
     await waitForFinalStatus(queue, task.id);
 
-    const result = queue.get(task.id);
+    const result = queue.getByConsumer(task.id, 'tenant-a');
     expect(result?.status).toBe('completed');
     expect(result?.result).toMatchObject({
       delivered: true,

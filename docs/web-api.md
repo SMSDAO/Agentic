@@ -11,7 +11,7 @@ Keys are configured via `SAAS_API_KEYS` (`id:key:plan,id:key:plan`).
 
 ## Monetization Headers
 
-Every authenticated response includes:
+Every authenticated success/error response (except auth failures before a consumer is identified) includes:
 
 - `x-usage-count`: consumer usage count in current runtime
 
@@ -22,7 +22,7 @@ Rate limits return `429` when exceeded.
 ## Agents API
 
 ### GET `/api/agents`
-List all agents.
+List agents owned by the authenticated consumer.
 
 ### POST `/api/agents`
 Create an agent.
@@ -38,13 +38,13 @@ Request body:
 ```
 
 ### GET `/api/agents/{agentId}`
-Fetch one agent.
+Fetch one owned agent.
 
 ### PATCH `/api/agents/{agentId}`
-Update one agent.
+Update one owned agent.
 
 ### DELETE `/api/agents/{agentId}`
-Delete one agent.
+Delete one owned agent.
 
 ---
 
@@ -78,7 +78,7 @@ Response: `202 Accepted`
 ```
 
 ### GET `/api/tasks`
-List all tasks, or use query parameter:
+List tasks for the authenticated consumer, or use query parameter:
 
 - `/api/tasks?taskId=<uuid>`
 

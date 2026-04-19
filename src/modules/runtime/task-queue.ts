@@ -4,6 +4,7 @@ export type TaskStatus = 'queued' | 'processing' | 'retrying' | 'completed' | 'f
 
 export interface TaskRecord {
   id: string;
+  consumerId: string;
   taskType: string;
   payload: Record<string, unknown>;
   status: TaskStatus;
@@ -18,6 +19,7 @@ export interface TaskRecord {
 export type TaskHandler = (payload: Record<string, unknown>) => Promise<unknown>;
 
 interface EnqueueInput {
+  consumerId: string;
   taskType: string;
   payload: Record<string, unknown>;
   maxAttempts?: number;
@@ -46,6 +48,7 @@ export class InMemoryTaskQueue {
     const now = new Date().toISOString();
     const task: TaskRecord = {
       id: randomUUID(),
+      consumerId: input.consumerId,
       taskType: input.taskType,
       payload: input.payload,
       status: 'queued',
@@ -63,12 +66,17 @@ export class InMemoryTaskQueue {
     return task;
   }
 
-  get(id: string): TaskRecord | null {
-    return this.tasks.get(id) ?? null;
+  getByConsumer(id: string, consumerId: string): TaskRecord | null {
+    const task = this.tasks.get(id);
+    if (!task || task.consumerId !== consumerId) {
+      return null;
+    }
+
+    return task;
   }
 
-  list(): TaskRecord[] {
-    return Array.from(this.tasks.values());
+  listByConsumer(consumerId: string): TaskRecord[] {
+    return Array.from(this.tasks.values()).filter((task) => task.consumerId === consumerId);
   }
 
   private async process(taskId: string): Promise<void> {
@@ -86,18 +94,17 @@ export class InMemoryTaskQueue {
       return;
     }
 
-    this.updateTask(taskId, { status: 'processing' });
+    const attempts = task.attempts + 1;
+    this.updateTask(taskId, { status: 'processing', attempts, error: undefined });
 
     try {
       const result = await handler(task.payload);
       this.updateTask(taskId, { status: 'completed', result });
     } catch (error) {
-      const attempts = task.attempts + 1;
       const message = error instanceof Error ? error.message : 'Unknown task failure';
 
       if (attempts < task.maxAttempts) {
         this.updateTask(taskId, {
-          attempts,
           status: 'retrying',
           error: message,
         });
@@ -109,7 +116,6 @@ export class InMemoryTaskQueue {
       }
 
       this.updateTask(taskId, {
-        attempts,
         status: 'failed',
         error: message,
       });

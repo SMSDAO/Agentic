@@ -10,7 +10,10 @@ export async function GET(request: NextRequest) {
     return access.error;
   }
 
-  return NextResponse.json({ agents: agentEngineStore.list() }, { headers: access.headers });
+  return NextResponse.json(
+    { agents: agentEngineStore.listByConsumer(access.consumerId) },
+    { headers: access.headers }
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -23,9 +26,9 @@ export async function POST(request: NextRequest) {
   const parsed = createAgentSchema.safeParse(body);
 
   if (!parsed.success) {
-    return jsonError('Invalid agent payload', 400);
+    return jsonError('Invalid agent payload', 400, { headers: access.headers });
   }
 
-  const agent = agentEngineStore.create(parsed.data);
+  const agent = agentEngineStore.create({ ...parsed.data, consumerId: access.consumerId });
   return NextResponse.json({ agent }, { status: 201, headers: access.headers });
 }

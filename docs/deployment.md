@@ -26,7 +26,6 @@ docker compose --env-file .env.saas up -d --build
 Services:
 
 - `web` on `http://localhost:3000`
-- `redis` on `localhost:6379`
 
 Stop:
 
@@ -48,7 +47,7 @@ Expected:
 ## 4) Runtime Configuration
 
 - `QUEUE_BACKEND=memory` (default)
-- `REDIS_URL=redis://redis:6379` (Redis endpoint for runtime migration)
+- `REDIS_URL` is reserved for future Redis-backed queue support and is not used by the current runtime
 - `SAAS_RATE_LIMIT_MAX` / `SAAS_RATE_LIMIT_WINDOW_MS` for API protection
 
 ## 5) CI/CD Release System
