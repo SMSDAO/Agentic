@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { createRateLimiter } from '@/services/ai/rate-limiting';
+import { logger } from '@/modules/safety/logger';
 
 export interface ApiConsumer {
   id: string;
@@ -35,14 +36,20 @@ function parseConsumersFromEnv(): ApiConsumer[] {
     .map((entry) => entry.trim())
     .filter(Boolean)
     .map((entry) => {
-      const [id, apiKey, plan] = entry.split(':');
+      const parts = entry.split(':');
+      if (parts.length !== 3) {
+        logger.warn('Skipping malformed SAAS_API_KEYS entry', { entry });
+        return null;
+      }
+
+      const [id, apiKey, plan] = parts;
       return {
         id: id || 'unknown',
         apiKey: apiKey || '',
         plan: plan === 'pro' || plan === 'enterprise' ? plan : 'free',
       } as ApiConsumer;
     })
-    .filter((consumer) => consumer.apiKey.length > 0);
+    .filter((consumer): consumer is ApiConsumer => consumer !== null && consumer.apiKey.length > 0);
 }
 
 const consumers = parseConsumersFromEnv();
@@ -63,7 +70,7 @@ function getApiKeyFromRequest(request: NextRequest): string {
     return '';
   }
 
-  return parts[1] ?? '';
+  return parts[1];
 }
 
 export function authenticateApiKey(request: NextRequest): ApiConsumer | null {

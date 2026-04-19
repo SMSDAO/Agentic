@@ -116,7 +116,6 @@ export class InMemoryTaskQueue {
     this.tasks.set(taskId, {
       ...task,
       ...updates,
-      attempts: updates.attempts ?? task.attempts,
       updatedAt: new Date().toISOString(),
     });
   }

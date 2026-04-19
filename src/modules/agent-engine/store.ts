@@ -39,7 +39,7 @@ export class AgentEngineStore {
       ...current,
       ...input,
       updatedAt: new Date().toISOString(),
-      config: input.config ?? current.config,
+      config: input.config ? { ...current.config, ...input.config } : current.config,
     };
 
     agents.set(id, updated);
