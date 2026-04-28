@@ -52,6 +52,9 @@ admin-tauri/src-tauri/target/
 admin-tauri/.env
 admin-tauri/.env.local
 
+# Agent audit logs (runtime-generated, not for version control)
+.logs/
+
 # Misc
 *.tsbuildinfo
 next-env.d.ts
