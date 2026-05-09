@@ -6,10 +6,15 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint-and-check:
     name: Type-check, lint, build, and test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     permissions:
       contents: read
     strategy:

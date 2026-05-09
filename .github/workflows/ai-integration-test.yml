@@ -14,10 +14,15 @@ on:
       - 'src/lib/ai/**'
       - 'src/app/api/ai/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   ai-type-check:
     name: Type-check AI service layer
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
