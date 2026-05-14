@@ -14,10 +14,15 @@ on:
       - 'config/chains.ts'
       - 'src/app/api/balance/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   solana-type-check:
     name: Type-check Solana integration
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:

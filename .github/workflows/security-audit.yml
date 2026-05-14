@@ -9,10 +9,15 @@ on:
     # Run every Monday at 08:00 UTC
     - cron: '0 8 * * 1'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   dependency-audit:
     name: Dependency vulnerability audit
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
